@@ -1,0 +1,93 @@
+# Outreach style and copywriting rules
+# These rules apply to every Connect+Note, DM, InMail, cover letter, and CV
+# bullet the plugin generates.
+#
+# REPLACE THE PLACEHOLDERS in pattern_match_anchors and sign_off sections with
+# your own values.
+
+# Tone
+voice: "Peer-to-peer, executive-to-executive. Warm but direct. No vendor-pitch energy."
+register: senior
+
+# Banned punctuation and phrases
+banned_punctuation:
+  - "—"   # em dash - replace with comma, period, or restructure
+  - "–"   # en dash - replace with hyphen or restructure
+banned_phrases:
+  - "passionate"
+  - "synergy"
+  - "I'm a great fit"
+  - "value-add"
+  - "thought leader"
+  - "rockstar"
+  - "ninja"
+  - "guru"
+  - "dynamic"
+  - "results-oriented"
+
+# Length discipline
+connect_note_target_chars: 270        # leave headroom under the 280 / 300 cap
+dm_target_words: 120-180
+inmail_target_words: 150-220
+cover_letter_target_words: 250-400
+cv_bullet_target_words: 12-22
+
+# Required structural elements per outreach
+required_elements:
+  - one concrete hook from the JD (specific phrase or pattern match)
+  - one of the user's pattern_match_anchors (see below)
+  - clear ask (25-min compare-notes / a call / a redirect to the right person)
+  - sign-off with first name only
+
+# YOUR pattern-match anchors
+# These are your "proof points" - concrete past achievements the outreach drafter
+# weaves into messages to demonstrate fit. Customize 2-4 anchors that map across
+# typical JD signals (AI-native, scale, regulated, founder-led, etc.).
+pattern_match_anchors:
+  - "<Company A>: <quantified achievement that demonstrates your edge, e.g. scaled to 100M users across 50 countries>"
+  - "<Company B>: <achievement mapping to AI-native / scale / regulated etc.>"
+  - "<Company C>: <achievement mapping to founder-led / 0-to-1 / PMF-to-scale>"
+
+# Banned closers
+banned_closers:
+  - "Looking forward to hearing from you"
+  - "Don't hesitate to reach out"
+  - "Hope this finds you well"
+  - "I look forward to your response"
+
+# CV tailoring discipline (referenced by cv-tailor agent)
+cv_tailoring_rules:
+  identity_stable: true              # name, headline scaffold, dates, education never change
+  max_career_highlight_cells_changed: 2   # of six total
+  italic_context_lines_per_role: "tailored phrase"
+  adjacency_sentence_required: true  # last sentence of executive summary lands the role-specific analogue
+  tailored_for_tag: "Tailored for {company}, {role_title}"
+  geo_header_per_role: true          # use geo-rules.yaml conditional
+  do_not_rewrite_summary_paragraph: true
+  do_not_rebuild_all_six_highlight_cells: true
+
+# Anti-bot and screener-test handling
+screener_test_words:
+  detect: true
+  examples:                            # plugin detects these via JD body scan
+    - 'mention the word "{word}"'
+    - 'use the phrase "{phrase}"'
+    - 'include "{token}" in your application'
+  action: "extract the word/phrase, embed naturally in cover letter / additional info field"
+
+# YOUR identity for sign-off and link footer
+# REPLACE THESE before first use.
+sign_off:
+  format: "first_name_only"
+  default: "<Your First Name>"
+  include_links:
+    - "linkedin.com/in/<your-linkedin-handle>"
+    - "<your-personal-site.com>"
+
+# CV filename format
+# The plugin saves tailored CVs as `{cv_filename_prefix}-{role_slug}.docx/.pdf`
+# Common pattern: "Lastname-Firstname-CV"
+cv_filename_prefix: "<Lastname>-<Firstname>-CV"
+
+# Language
+language: en-US                       # change to en-GB for British spelling on UK roles

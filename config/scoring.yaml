@@ -1,0 +1,60 @@
+# Fit scoring weights and thresholds
+# Each role gets a weighted 1-10 score against these dimensions.
+# Weights sum to 1.0; raw scores per dimension are 1-10; final = sum(weight * score).
+
+dimensions:
+  stage:
+    weight: 0.20
+    description: "Series A through D or post-IPO scale-up; pre-Series-A heavily discounted"
+  domain:
+    weight: 0.20
+    description: "B2B SaaS, AI/ML tooling, dev tools, security, regulated platforms"
+  scope:
+    weight: 0.15
+    description: "Owns product org of 10+, reports to CEO/CTO/CPTO"
+  comp:
+    weight: 0.10
+    description: "$300k+ base implied or stated; lower bands discount this dimension"
+  geo:
+    weight: 0.10
+    description: "Hard filter; binary 1.0 or 0.0; non-pass = drop entire role"
+  founder_quality:
+    weight: 0.10
+    description: "Founder/CEO track record, fundraising, prior exits"
+  ai_native_signal:
+    weight: 0.10
+    description: "AI-native operating model in JD body, AI-first build practices, AI/ML in product surface"
+  founder_partnership:
+    weight: 0.05
+    description: "Reports to founder, founder-led culture, build-from-scratch mandate"
+
+# Triage thresholds
+tier_1_threshold: 7.5    # tier 1 = greenlight by default, no hard blockers
+tier_2_threshold: 6.5    # tier 2 = manageable friction; user-discretion greenlight
+skip_below: 6.5           # below this = skip unless user explicitly overrides
+
+# Hard blockers (zero out the score regardless of dimension scores)
+hard_blockers:
+  - "UK SC clearance required and user is not UK citizen"
+  - "On-site only in geo where relocation is excluded"
+  - "Pre-Series-A and equity-only"
+  - "Title is product marketing / product PR / product regulation"
+  - "Hybrid 5 days/week outside home metro"
+
+# JD-body filters (apply after JD extraction, can downgrade tier)
+post_jd_extraction_checks:
+  - signal: "explicit IC framing"
+    action: "downgrade by 1 tier"
+    reason: "User profile is people-manager track; IC-permanence is a downstep"
+  - signal: "FCA-regulated insurance product specialist"
+    action: "downgrade by 1 tier"
+    reason: "Specialist domain expertise the user does not have direct experience in"
+  - signal: "Founder's Associate / Chief of Staff title in JD body"
+    action: "downgrade by 1 tier"
+    reason: "Below CPO/VP scope"
+
+# Confidence flags
+score_confidence:
+  card_only: low        # LinkedIn-card-only data; pull JD before greenlight
+  jd_extracted: medium  # full JD pulled from ATS
+  jd_plus_signals: high # full JD + verified contacts + comp band

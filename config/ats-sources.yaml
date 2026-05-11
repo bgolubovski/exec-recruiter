@@ -1,0 +1,163 @@
+# ATS sources for the Google-direct sweep
+# Used by skills/phase-1-sweep Step 1B and the ats-google-sweep agent.
+#
+# Premise: a meaningful slice of senior product roles get posted to the company's
+# ATS but never crossposted to LinkedIn, or arrive on LinkedIn days later.
+# Google's site: operator over the major ATS domains catches that long tail.
+#
+# Pilot finding (v0.2.0): Google indexes ATS pages fast but de-indexes them
+# slowly. Many URLs in the index are already filled or pulled. The agent must
+# always run a liveness check before fetching the JD body, and the body fetch
+# itself must route to Chrome render for SPA-based ATSs (Ashby, Workday).
+
+ats_domains:
+  - id: greenhouse
+    site: "boards.greenhouse.io"
+    label: "Greenhouse"
+    body_extraction: web_fetch
+    liveness_signal: "?error=true"     # Greenhouse redirects pulled jobs to /{org}?error=true
+    notes: "Public JD body, static HTML. URL pattern /{company}/jobs/{id}."
+
+  - id: lever
+    site: "jobs.lever.co"
+    label: "Lever"
+    body_extraction: web_fetch
+    liveness_signal: "empty_body"      # Lever returns near-empty body for pulled jobs
+    notes: "Public JD body. URL pattern /{company}/{slug}."
+
+  - id: workday
+    site: "myworkdayjobs.com"
+    label: "Workday"
+    body_extraction: chrome
+    liveness_signal: "404_or_empty_role"
+    notes: "Tenant subdomains vary (wd1, wd3, wd5, wd103, etc.). Always use the bare myworkdayjobs.com to catch all tenants. JS-rendered, needs Claude in Chrome."
+
+  - id: icims
+    site: "careers.icims.com"
+    label: "iCIMS"
+    body_extraction: web_fetch
+    liveness_signal: "redirect_to_search"
+    notes: "Some tenants use {company}.icims.com directly. If a target company is missing, add their tenant domain as an alt entry."
+
+  - id: jobvite
+    site: "jobs.jobvite.com"
+    label: "Jobvite"
+    body_extraction: web_fetch
+    liveness_signal: "empty_body"
+    notes: "Public JD."
+
+  - id: bamboohr
+    site: "jobs.bamboohr.com"
+    label: "BambooHR"
+    body_extraction: web_fetch
+    liveness_signal: "redirect_to_search"
+    notes: "SMB / mid-market heavy. Lower hit rate at exec level but worth keeping for completeness."
+
+  - id: smartrecruiters
+    site: "jobs.smartrecruiters.com"
+    label: "SmartRecruiters"
+    body_extraction: web_fetch
+    liveness_signal: "404_or_empty_role"
+    notes: "Public JD."
+
+  - id: workable
+    site: "apply.workable.com"
+    label: "Workable"
+    body_extraction: web_fetch
+    liveness_signal: "redirect_to_search"
+    notes: "Plugin already handles this via the jd-extractor agent."
+
+  - id: teamtailor
+    site: "teamtailor.com"
+    label: "Teamtailor"
+    body_extraction: web_fetch
+    liveness_signal: "404_or_empty_role"
+    notes: "Multi-tenant {company}.teamtailor.com. Plugin already handles via jd-extractor."
+
+  - id: ashby
+    site: "jobs.ashbyhq.com"
+    label: "Ashby"
+    body_extraction: chrome              # ADJUSTMENT #2: Ashby is an SPA; web_fetch sees only the shell.
+    liveness_signal: "spa_no_role_data"
+    notes: "Ashby is a SPA. Body fetch must route through jd-extractor (Chrome render). Popular with Series A/B AI-native scale-ups; high signal density for the ICP."
+
+# ---- Liveness check (ADJUSTMENT #1) ----
+# Run BEFORE the body fetch. Cheap HEAD or short GET against the URL; classify by signal.
+# If liveness fails, skip the role entirely - do not fetch body, do not score.
+liveness_check:
+  enabled: true
+  method: GET                            # cheaper than full GET if HEAD supported, but most ATS hosts don't return 404 on HEAD
+  follow_redirects: true
+  read_bytes: 4096                       # only need first 4KB to detect redirect/error markers
+  signals:
+    - id: "?error=true"
+      match: "url_contains:?error=true"
+      classification: stale
+    - id: "empty_body"
+      match: "body_length_below:200"
+      classification: stale
+    - id: "redirect_to_search"
+      match: "url_contains:/search"
+      classification: stale
+    - id: "404_or_empty_role"
+      match: "status_code:404 OR title_missing"
+      classification: stale
+    - id: "spa_no_role_data"
+      match: "body_contains:You need to enable JavaScript"
+      classification: needs_chrome_render
+  on_classification:
+    stale: skip
+    needs_chrome_render: route_to_jd_extractor
+
+# ---- Search query construction ----
+# Google enforces a 32-word / ~2,048-char limit per query.
+query_template:
+  word_limit: 32
+  char_limit: 2000
+  recency_days: 14                       # ADJUSTMENT #3: was 7. Google's index lag means 7 days misses too much that LinkedIn missed.
+  exclude_terms:                         # appended as -term in the Google query
+    - "intern"
+    - "internship"
+    - "junior"
+    - "associate"
+    # Note: "manager" is intentionally NOT excluded - VP/CPO JDs frequently contain
+    # "manager" as in "your team will include managers" or "manage the product
+    # organisation". Excluding it would filter out legitimate exec roles.
+
+# ---- Per-region geo signals to splice into the query ----
+region_query_terms:
+  us-remote:
+    - "remote"
+    - "United States"
+    - "USA"
+    - "New York"
+    - "San Francisco"
+  uk:
+    - "London"
+    - "United Kingdom"
+  eu:
+    - "Berlin"
+    - "Amsterdam"
+    - "Madrid"
+    - "Paris"
+    - "Dublin"
+
+    - "Remote EU"
+
+# ---- Result-handling caps ----
+result_caps:
+  per_query: 5                           # ADJUSTMENT #4: was 20. Pilot showed ~75% staleness; don't waste fetches on long lists.
+  per_domain: 25                         # global cap per ATS per sweep (was 50; reduced proportionally)
+  total_per_sweep: 100                   # absolute ceiling across all (domain, region) pairs (was 200)
+
+# ---- Score-confidence handling ----
+# ATS-direct results have no applicants_count signal and no LinkedIn poster context,
+# so the scoring layer treats them one notch lower confidence than a LinkedIn
+# card+body pair. Agent emits source: "ats-google" so phase-1-sweep applies the discount.
+score_confidence:
+  default: medium
+  source_label: "ats-google"
+
+# ---- Failure-mode handling ----
+on_search_rate_limit: continue           # if Google rate-limits a query, skip it and continue
+on_body_unreachable: card_only           # fall back to the search-snippet for scoring with score_confidence: low

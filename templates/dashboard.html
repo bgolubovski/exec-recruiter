@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>exec-recruiter dashboard</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; max-width: 1100px; margin: 0 auto; color: #111; background: #fafafa; }
+  h1 { margin: 0 0 4px; font-size: 22px; font-weight: 500; }
+  .subtitle { color: #666; font-size: 14px; margin-bottom: 24px; }
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat { background: white; border: 1px solid #e6e6e6; border-radius: 8px; padding: 14px; }
+  .stat-num { font-size: 24px; font-weight: 500; }
+  .stat-label { font-size: 12px; color: #666; }
+  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e6e6e6; border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
+  th { background: #f7f7f7; font-weight: 500; color: #333; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .green { background: #2ea043; }
+  .yellow { background: #d4a72c; }
+  .red { background: #cf222e; }
+  .gray { background: #999; }
+  .high { color: #2ea043; font-weight: 500; }
+  .med { color: #555; }
+  .low { color: #999; }
+  .filter-bar { margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-bar button, .filter-bar input { padding: 6px 12px; border: 1px solid #d0d7de; background: white; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .filter-bar button.active { background: #0969da; color: white; border-color: #0969da; }
+  details { background: white; border: 1px solid #e6e6e6; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+  summary { cursor: pointer; font-weight: 500; }
+  ul { margin: 8px 0; padding-left: 20px; font-size: 13px; }
+  ul li { margin-bottom: 4px; }
+  .empty-state { text-align: center; padding: 40px; color: #888; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>exec-recruiter dashboard</h1>
+<div class="subtitle" id="todayLabel">Loading...</div>
+
+<details>
+  <summary>How to update this dashboard</summary>
+  <p style="font-size: 13px; color: #555;"><strong>To add a role:</strong> Append to <code>const ROLES = [...]</code> with the same shape as existing rows. Save and reload.</p>
+  <p style="font-size: 13px; color: #555;"><strong>To update a role:</strong> Edit the JS data block at the bottom of this file and change the status field. The dashboard recomputes stats and "Today's Actions" automatically.</p>
+  <p style="font-size: 13px; color: #555;"><strong>Inbound signals (passive log):</strong></p>
+  <ul>
+    <li>(no inbound signals yet)</li>
+  </ul>
+</details>
+
+<div class="stats" id="stats"></div>
+
+<details open>
+  <summary>Today's actions</summary>
+  <ul id="todayActions"><li>(loaded after dashboard renders)</li></ul>
+</details>
+
+<div class="filter-bar">
+  <button data-filter-status="all" class="active">All</button>
+  <button data-filter-status="pending">Pending</button>
+  <button data-filter-status="drafted">Drafted</button>
+  <button data-filter-status="replied">Replied</button>
+  <button data-filter-status="rejected">Rejected</button>
+  <button data-filter-status="skipped">Skipped</button>
+  <input type="text" id="searchBox" placeholder="Search company / role..." style="margin-left: auto; min-width: 220px;">
+</div>
+
+<table id="rolesTable">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Role / Company</th>
+      <th>Score</th>
+      <th>Geo</th>
+      <th>Channels</th>
+      <th>Status</th>
+      <th>Send</th>
+    </tr>
+  </thead>
+  <tbody id="rolesBody"></tbody>
+</table>
+
+<script>
+const TODAY = new Date();
+const TODAY_STR = TODAY.toISOString().slice(0, 10);
+document.getElementById('todayLabel').textContent = 'Today: ' + TODAY_STR;
+
+function daysBetween(a, b) {
+  const aD = new Date(a + 'T00:00:00Z');
+  const bD = new Date(b + 'T00:00:00Z');
+  return Math.floor((bD - aD) / (1000 * 60 * 60 * 24));
+}
+
+function dayName(d) {
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getUTCDay()];
+}
+
+function followUpForRole(role) {
+  if (!role.sendDate) return null;
+  const send = new Date(role.sendDate + 'T00:00:00Z');
+  const day5 = new Date(send); day5.setUTCDate(day5.getUTCDate() + 5);
+  const day7 = new Date(send); day7.setUTCDate(day7.getUTCDate() + 7);
+  const day10 = new Date(send); day10.setUTCDate(day10.getUTCDate() + 10);
+  const daysSince = daysBetween(role.sendDate, TODAY_STR);
+  if (daysSince < 5) return { date: day5.toISOString().slice(0,10), label: 'Day 5 bump', urgency: 'green' };
+  if (daysSince <= 7) return { date: day7.toISOString().slice(0,10), label: 'Day ' + daysSince + ' bump (DUE)', urgency: 'yellow' };
+  if (daysSince <= 10) return { date: day10.toISOString().slice(0,10), label: 'Day 10 final (DUE)', urgency: 'red' };
+  return { date: day10.toISOString().slice(0,10), label: 'Overdue Day 10', urgency: 'red' };
+}
+
+const ROLES = [
+  // Append role entries here. Schema:
+  // {
+  //   id: <int>, slug: "<kebab-case>",
+  //   role: "<title>", company: "<company>",
+  //   location: "<location>", comp: "<comp band>", score: <0-10>,
+  //   jdUrl: "<url>",
+  //   contact: "<name + role>", contactUrl: "<linkedin>",
+  //   channels: ["..."], sendDate: "YYYY-MM-DD" | null, status: "drafted" | "pending" | "replied" | "rejected" | "skipped",
+  //   sendName: "<sendName>" | null, note: "<long-form note>"
+  // }
+];
+
+function scoreClass(s) {
+  if (s >= 8.0) return 'high';
+  if (s >= 7.0) return 'med';
+  if (s >= 6.0) return '';
+  return 'low';
+}
+function urgencyDot(role) {
+  if (role.status === 'skipped') return { cls: 'gray', label: 'skipped' };
+  if (role.status === 'rejected') return { cls: 'gray', label: 'rejected' };
+  if (role.status === 'replied') return { cls: 'green', label: 'replied' };
+  if (!role.sendDate) return { cls: 'gray', label: '-' };
+  const days = daysBetween(role.sendDate, TODAY_STR);
+  if (days < 5) return { cls: 'green', label: 'fresh (' + days + 'd)' };
+  if (days <= 7) return { cls: 'yellow', label: 'bump window (' + days + 'd)' };
+  return { cls: 'red', label: 'overdue (' + days + 'd)' };
+}
+
+function fileLinkPath(slug, filename) {
+  return '../outreach/' + slug + '/' + filename;
+}
+
+let activeFilters = { status: 'all', search: '' };
+
+function renderStats() {
+  const stats = { total: ROLES.length, pending: 0, replied: 0, rejected: 0, skipped: 0, fresh: 0, bump: 0, overdue: 0 };
+  ROLES.forEach(r => {
+    if (r.status === 'pending' || r.status === 'drafted') stats.pending++;
+    else if (r.status === 'replied') stats.replied++;
+    else if (r.status === 'rejected') stats.rejected++;
+    else if (r.status === 'skipped') stats.skipped++;
+    if (r.sendDate && r.status !== 'rejected' && r.status !== 'skipped') {
+      const d = daysBetween(r.sendDate, TODAY_STR);
+      if (d < 5) stats.fresh++;
+      else if (d <= 7) stats.bump++;
+      else if (d <= 10) stats.overdue++;
+    }
+  });
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="stat-num">${stats.total}</div><div class="stat-label">Total roles</div></div>
+    <div class="stat"><div class="stat-num">${stats.pending}</div><div class="stat-label">Pending</div></div>
+    <div class="stat"><div class="stat-num">${stats.bump}</div><div class="stat-label">Bump window</div></div>
+    <div class="stat"><div class="stat-num">${stats.overdue}</div><div class="stat-label">Day 10+</div></div>
+    <div class="stat"><div class="stat-num">${stats.replied}</div><div class="stat-label">Replied</div></div>
+  `;
+}
+
+function renderTodayActions() {
+  const items = [];
+  ROLES.forEach(r => {
+    if (r.status === 'rejected' || r.status === 'skipped' || r.status === 'replied') return;
+    if (!r.sendDate) return;
+    const d = daysBetween(r.sendDate, TODAY_STR);
+    if (d === 5 || d === 6 || d === 7) items.push(`Day ${d} bump: <strong>${r.company}</strong> - ${r.role}`);
+    else if (d >= 10) items.push(`Day ${d} final action: <strong>${r.company}</strong> - ${r.role}`);
+  });
+  const el = document.getElementById('todayActions');
+  el.innerHTML = items.length ? items.map(s => '<li>' + s + '</li>').join('') : '<li>(no actions due today)</li>';
+}
+
+function renderRoles() {
+  const tbody = document.getElementById('rolesBody');
+  if (!ROLES.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No roles yet. Run Phase 1 sweep to add roles.</td></tr>';
+    return;
+  }
+  let rows = ROLES.slice();
+  if (activeFilters.status !== 'all') rows = rows.filter(r => r.status === activeFilters.status);
+  if (activeFilters.search) {
+    const s = activeFilters.search.toLowerCase();
+    rows = rows.filter(r => (r.company + ' ' + r.role).toLowerCase().includes(s));
+  }
+  rows.sort((a, b) => (b.sendDate || '').localeCompare(a.sendDate || '') || (b.score - a.score));
+  tbody.innerHTML = rows.map(r => {
+    const dot = urgencyDot(r);
+    return `<tr>
+      <td><span class="dot ${dot.cls}"></span></td>
+      <td><strong>${r.role}</strong><br><span style="color: #666;">${r.company}</span></td>
+      <td><span class="${scoreClass(r.score)}">${r.score.toFixed(1)}</span></td>
+      <td>${r.location}</td>
+      <td>${(r.channels || []).join(', ')}</td>
+      <td>${r.status}<br><span style="color: #999; font-size: 11px;">${dot.label}</span></td>
+      <td>${r.sendDate || '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+document.querySelectorAll('[data-filter-status]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-filter-status]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilters.status = btn.dataset.filterStatus;
+    renderRoles();
+  });
+});
+document.getElementById('searchBox').addEventListener('input', (e) => {
+  activeFilters.search = e.target.value;
+  renderRoles();
+});
+
+renderStats();
+renderTodayActions();
+renderRoles();
+</script>
+</body>
+</html>

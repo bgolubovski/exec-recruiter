@@ -1,0 +1,29 @@
+{
+  "name": "exec-recruiter",
+  "version": "0.3.0",
+  "description": "Your personal executive recruiter for senior Product Leadership job hunts (CPO, VP/SVP Product, Head of Product). Dual sourcing across LinkedIn AND major ATS domains (Greenhouse, Lever, Workday, Ashby, etc.) via Google site: search. Fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts, and approval-gated sends. Configure for your ICP, geo, and CV; the plugin handles the rest.",
+  "author": {
+    "name": "Blagoja Golubovski",
+    "url": "https://github.com/bgolubovski"
+  },
+  "homepage": "https://github.com/bgolubovski/exec-recruiter",
+  "repository": "https://github.com/bgolubovski/exec-recruiter",
+  "keywords": [
+    "job-search",
+    "executive-recruiter",
+    "product-leadership",
+    "cpo",
+    "vp-product",
+    "head-of-product",
+    "linkedin",
+    "ats-search",
+    "greenhouse",
+    "lever",
+    "ashby",
+    "workday",
+    "outreach",
+    "cv-tailoring",
+    "career"
+  ],
+  "license": "MIT"
+}

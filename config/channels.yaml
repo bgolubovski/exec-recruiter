@@ -1,0 +1,66 @@
+# Outreach channels and contact-discovery preferences
+# Defines the order in which the plugin attempts to reach a contact.
+
+# Channel priority order (top = try first)
+priority_order:
+  - id: 1st_degree_dm
+    label: "Direct Message (1st-degree connection)"
+    cost: 0
+    char_limit: null   # unlimited
+  - id: open_profile_dm
+    label: "Direct Message (Open Profile / unverified)"
+    cost: 0            # may paywall to InMail at send time; check before typing
+    char_limit: null
+    risk: "may convert to InMail paywall at send time"
+  - id: connect_with_note_premium
+    label: "Connect+Note (Premium tier)"
+    cost: 0            # Premium = unlimited per week
+    char_limit: 300
+    requires: Premium
+  - id: connect_with_note_standard
+    label: "Connect+Note (standard tier)"
+    cost: 0
+    char_limit: 280
+    weekly_limit: ~5
+  - id: warm_intro
+    label: "Mutual-connection warm intro"
+    cost: 0
+    requires: shared_2nd_degree_mutuals
+  - id: inmail
+    label: "InMail (paid credit)"
+    cost: 1            # one credit
+    char_limit: null
+    when: "only when no free path exists; preserve credits"
+  - id: external_email
+    label: "External email (apollo / hunter)"
+    cost: 0
+    requires: contact_enrichment_mcp
+
+# Credit preservation rules
+inmail_credits:
+  preserve_when_possible: true
+  burn_only_for_tier_1: true
+  burn_only_when_no_free_path: true
+
+# Contact discovery cascade
+# When a role is greenlit, attempt to identify a contact in this order
+contact_discovery_cascade:
+  - linkedin_job_poster        # the "Meet the hiring team" panel on the LinkedIn job
+  - hiring_manager_named_in_jd # often "Reports to: ..." or "Hiring manager: ..."
+  - 1st_degree_at_company      # search 1st-degree at the company in product/eng leadership
+  - 2nd_degree_with_strong_mutual  # 2nd-degree with shared mutuals
+  - founder_or_ceo             # founder for founder-led companies, CEO otherwise
+  - recruiter_first_then_hiring_manager  # for recruiter-masked listings
+
+# Recruiter-masked-listing handling
+recruiter_masked:
+  first_touch: recruiter_for_de_anon
+  second_touch: hiring_manager_after_de_anon
+  warning: "Aggregator-masked listings frequently auto-reject at Day-3 - flag aggressively"
+
+# Send-flow safety
+send_safety:
+  no_autonomous_send: true
+  type_then_stop: true
+  show_message_before_position: true
+  per_role_approval_required: true

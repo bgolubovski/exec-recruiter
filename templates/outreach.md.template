@@ -1,0 +1,60 @@
+# {company} - {role_title}
+
+**Role:** {role_title} ({location}, {modality}, {employment_type})
+**JD:** {linkedin_url}
+**ATS:** {ats_url}
+**Reports to:** {reports_to}
+**Posted:** {posted_date}, ~{posted_window} ago, ~{applicants_count} clicked apply
+**Status:** {status}
+
+## Contact priority
+
+1. **{primary_contact_role}:** {primary_contact_name} - {primary_contact_url}
+2. **{backup_contact_role}:** {backup_contact_name} - {backup_contact_url}
+3. **Apply path:** {ats_url}
+4. **Channel:** {primary_channel} (preserve InMail credit)
+
+## Outreach draft A - {primary_channel} to {primary_contact_name} ({primary_contact_url_short})
+
+{primary_message_300_chars_or_less}
+
+({char_count} chars - fits {primary_channel} limit.)
+
+## Outreach draft B - {primary_channel} to {backup_contact_name} ({backup_contact_url_short})
+
+{backup_message_300_chars_or_less}
+
+({char_count} chars.)
+
+## Outreach draft - longer DM (if Open Profile or after accept)
+
+Hi {first_name},
+
+{paragraph_1_jd_hook_and_pattern_match}
+
+{paragraph_2_current_evidence_current_venture_or_similar}
+
+{paragraph_3_geo_and_ask}
+
+Best,
+{self_first_name}
+{linkedin_short}  ·  {personal_site}
+
+## Application form notes
+
+- Anti-bot screener: {screener_word_or_none}
+- Cover letter angle: {cover_letter_angle}
+- Required fields beyond CV: {required_fields}
+
+## Send strategy
+
+- **Primary:** send Draft A to {primary_contact_name} first ({primary_contact_role} = right desk)
+- **Secondary:** send Draft B to {backup_contact_name} 24-48h later if no accept, or fire both same-day for parallel reach
+- Apply via {ats_name} in parallel with first Connect+Note (don't wait for accept)
+
+## Approval gate
+
+- [ ] User reviewed CV (PDF + DOCX)
+- [ ] User reviewed outreach draft
+- [ ] User approves Connect+Note to {primary_contact_name}
+- [ ] User approves application via {ats_name}

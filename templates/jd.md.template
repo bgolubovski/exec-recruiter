@@ -1,0 +1,53 @@
+# {role_title} - {company}
+
+**LinkedIn:** {linkedin_url}
+**ATS / company careers:** {ats_url}
+**Captured:** {date_yyyy_mm_dd}
+**Location:** {location_with_modality}
+**Comp:** {comp_band_or_not_stated}
+**Reports to:** {reports_to}
+**Listing notes:** {posted_window}, {applicants_count} clicked apply at sweep time
+
+## About the role (verbatim from ATS body)
+
+> {jd_paragraph_1}
+
+> {jd_paragraph_2_if_any}
+
+### Mandate signals
+
+1. {mandate_1}
+2. {mandate_2}
+3. {mandate_3}
+4. {mandate_4_optional}
+
+### Required experience
+
+- {req_1}
+- {req_2}
+- {req_3}
+- {req_4_optional}
+
+### Screener test (anti-bot, if any)
+
+> "{screener_quote}"
+
+Need to drop "{screener_word}" naturally into the application form fields ({where_to_drop_it}).
+
+### Pattern match anchors used in CV + outreach
+
+- **{anchor_1_company}**: {anchor_1_relevance}
+- **{anchor_2_company}**: {anchor_2_relevance}
+- **{anchor_3_company}**: {anchor_3_relevance}
+
+### Channel plan
+
+- **Application:** {ats_url}
+- **Warm outreach (primary):** Connect+Note to {primary_contact_name} ({primary_contact_role}) - {primary_contact_url}
+- **Backup:** Connect+Note to {backup_contact_name} ({backup_contact_role})
+- **InMail:** {inmail_decision}
+
+### Friction flags
+
+- {friction_1}
+- {friction_2_optional}

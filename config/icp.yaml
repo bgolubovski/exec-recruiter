@@ -1,0 +1,91 @@
+# ICP and role titles
+# Defines what roles to search for and how to filter inbound listings.
+#
+# The defaults below are tuned for senior Product Leadership search (CPO,
+# VP Product, Head of Product at scale). Adjust titles, stages, domains, and
+# comp floors to match your own seniority and ICP.
+
+# Primary target titles - these drive the LinkedIn search keywords
+target_titles:
+  - "Chief Product Officer"
+  - "VP of Product"
+  - "VP Product"
+  - "VP Products"           # plural variant - LinkedIn search misses this if not listed
+  - "SVP Product"
+  - "SVP of Product"
+  - "Head of Product"
+
+# Stage / company-shape filters
+stage_preference:
+  - Series A
+  - Series B
+  - Series C
+  - Series D
+  - post-IPO scale-up
+exclude_stages:
+  - pre-funded
+  - sub-Series-A
+  - equity-only
+
+# Domain / sector preference (any match counts as positive).
+# Customize for your domain expertise and interest areas.
+preferred_domains:
+  - B2B SaaS
+  - AI/ML tooling
+  - dev tools
+  - security
+  - data platforms
+  - AI-native scale-ups
+  - regulated platforms (privacy, compliance, fintech)
+
+# Scope / org-shape filters
+min_org_size: 10            # min product org size you'd lead
+reports_to:
+  - CEO
+  - CTO
+  - CPTO
+exclude_role_types:
+  - Product Marketing
+  - Product Marketing Management
+  - Design-only
+  - Risk Operations
+  - Operations sub-functions
+  - Product PR / Communications
+
+# Compensation floor - implied or stated.
+# REPLACE WITH YOUR OWN comp floors. The plugin uses these to discount tier
+# when the JD or salary band falls below your floor. Leave at 0 to skip
+# the comp check.
+comp_floor_usd_base: 0      # e.g. 300000 for VP Product in the US
+comp_floor_gbp_base: 0      # e.g. 200000 for VP Product in the UK
+comp_floor_eur_base: 0      # e.g. 220000 for VP Product in EU
+
+# Title-pattern auto-rejects (case-insensitive substring match)
+# These hit at score time, not at search time, since title and JD body often disagree.
+title_red_flags:
+  - "Founder's Associate"
+  - "Co-Founder / Head"
+  - "Chief of Staff"
+  - "Product Marketing"
+  - "Product PR"
+  - "Product Regulation"
+
+# Recruiter-masked listings - flag at sourcing for de-anon-or-skip decision
+recruiter_masked_handling: flag    # flag | skip | always-pursue
+# Known recruiter-mask aggregators (these post heavily on Lever/Greenhouse).
+# Update this list with aggregators relevant to your geo and seniority.
+recruiter_masked_known_aggregators:
+  - Jobgether
+  # Add others as you encounter them in your sweeps, e.g.:
+  # - "<aggregator handle that posts under a generic company name>"
+
+# JD-body checks (run after JD extraction, before tailoring).
+# These can downgrade a role's tier or skip it entirely.
+jd_body_red_flags:
+  - "individual contributor"     # explicit IC framing
+  - "not waiting to manage"      # IC-permanence language
+  - "chief of staff"
+  - "force-multiplier for the CPO"
+  # Add domain-specific red flags here, e.g.:
+  # - "FCA-regulated insurance specialist required"
+  # - "Series A founder-only role"

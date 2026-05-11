@@ -1,0 +1,51 @@
+# Follow-up windows and escalation thresholds
+# All windows count days since the original sendDate.
+
+# Standard windows
+fresh_window_days: 4         # 0-4 days since send: do not follow up
+bump_window_open_day: 5      # day 5 = bump window opens
+bump_window_close_day: 7     # day 7 = bump window closes
+final_action_day: 10         # day 10 = final action (close out or escalate)
+
+# Per-window behaviors
+fresh:
+  cls: green
+  action: "wait"
+  message: "fresh ({d}d)"
+bump:
+  cls: yellow
+  action: "draft Day-{d} bump"
+  message: "bump window ({d}d)"
+final_action:
+  cls: red
+  action: "Day-10 final: choose between final-bump-message OR mark passive-skip"
+  message: "Day-10 final (DUE) | Overdue Day-10"
+
+# Bump-message templates (loaded by daily-bump skill)
+bump_templates:
+  day_5_first_touch:
+    label: "First bump - light, references the original message"
+    template: "Hi {first_name}, circling back on the note above re: {role}. Happy to share the tailored CV or a quick async loom if that's easier than a call. {self_first_name}"
+  day_7_second_touch:
+    label: "Second bump - shifts to a different angle (e.g. ask for re-route to right person)"
+    template: "Hi {first_name}, no worries if the {role} timing is off. If there's a better person on the team to talk to, happy to redirect. {self_first_name}"
+  day_10_final:
+    label: "Final touch - closing acknowledgment, leaves door open"
+    template: "Hi {first_name}, won't keep pinging. If the {role} comes back into focus or another role surfaces, glad to compare notes anytime. {self_first_name}"
+
+# Auto-skip rules
+auto_skip_after:
+  recruiter_masked_silent_at_day_5: false   # do not auto-skip; surface for review
+  recruiter_masked_silent_at_day_10: true   # auto-mark passive-skip
+  template_reject_email: true               # auto-mark rejected on detection of generic ATS template
+
+# Inbound signal triggers
+profile_view_after_outreach:
+  action: "log; do not escalate"
+  posture: "ball in their court"
+mutual_connection_view:
+  action: "log only"
+  posture: "neutral"
+recruiter_masked_de_anon_received:
+  action: "trigger second-touch to hiring manager"
+  reset_clock: true   # restart bump windows from de-anon date
