@@ -14,19 +14,14 @@ Discipline (per config/outreach-style.yaml):
 
 Usage:
   python3 tailor_cv.py \
-    --role-slug company-role-slug \
+    --role-slug nplan-vp-product \
     --baseline /path/to/templates/cv-baseline.docx \
     --replacements /path/to/replacements.json \
-    --out-dir /path/to/outreach/company-role-slug \
-    --cv-filename-prefix "Lastname-Firstname-CV"
-
-The --cv-filename-prefix is the prefix for the output docx/pdf filenames. The
-final file is named "{prefix}-{role_slug}.docx" (and .pdf). Pull this prefix
-from outreach-style.yaml `cv_filename_prefix` in the calling skill.
+    --out-dir /path/to/outreach/nplan-vp-product
 
 The replacements.json file is a flat dict: {"old_string": "new_string", ...}.
-Each old_string must appear in the docx XML; each new_string is XML-escaped if
-it contains '&' (the script auto-escapes to '&amp;' for safety).
+Each old_string must appear in the docx XML; each new_string is XML-escaped if it
+contains '&' (the script auto-escapes to '&amp;' for safety).
 """
 import argparse
 import json
@@ -90,9 +85,6 @@ def main():
     ap.add_argument("--baseline", required=True, help="path to baseline CV docx")
     ap.add_argument("--replacements", required=True, help="path to replacements JSON file")
     ap.add_argument("--out-dir", required=True, help="output directory (per-role outreach folder)")
-    ap.add_argument("--cv-filename-prefix", default="CV",
-                    help='prefix for the output filename, e.g. "Lastname-Firstname-CV". '
-                         'Pull from outreach-style.yaml cv_filename_prefix.')
     ap.add_argument("--no-pdf", action="store_true", help="skip PDF generation")
     args = ap.parse_args()
 
@@ -102,7 +94,7 @@ def main():
         replacements = json.load(f)
 
     out_docx = os.path.join(
-        args.out_dir, f"{args.cv_filename_prefix}-{args.role_slug}.docx"
+        args.out_dir, f"Golubovski-Blagoja-CV-{args.role_slug}.docx"
     )
     stats = tailor(args.baseline, replacements, out_docx)
 

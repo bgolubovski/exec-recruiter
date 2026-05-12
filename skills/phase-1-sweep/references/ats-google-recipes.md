@@ -43,7 +43,7 @@ site:myworkdayjobs.com ("VP Product" OR "Chief Product Officer" OR "Head of Prod
 ### EU
 
 ```
-site:jobs.ashbyhq.com ("VP Product" OR "Chief Product Officer" OR "Head of Product") ("Berlin" OR "Amsterdam" OR "Madrid" OR "Paris" OR "Dublin") -intern -junior -associate after:2026-04-26
+site:jobs.ashbyhq.com ("VP Product" OR "Chief Product Officer" OR "Head of Product") ("Berlin" OR "Amsterdam" OR "Madrid" OR "Paris" OR "Dublin" OR "Lisbon") -intern -junior -associate after:2026-04-26
 ```
 
 ## Per-ATS liveness signals

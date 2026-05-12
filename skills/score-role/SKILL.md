@@ -77,7 +77,7 @@ Format:
 Score: 7.5 (Tier 1)
 
 Stage 9 (Series B, GV-backed) | Domain 8 (AI-native B2B) | Scope 8 (VP, reports to CTO, sits on SLT)
-Comp 6 (not stated, UK band ~£180K implied) | Geo 10 (UK Remote, fits) | Founder 8 ({founder_name}, {founder_credential})
+Comp 6 (not stated, UK band ~£180K implied) | Geo 10 (UK Remote, fits) | Founder 8 (Dev Amratia, AI advisor)
 AI signal 9 (ML-trained on $2T schedules, AI-first ops) | Founder partnership 7 (CTO-led, founder-led ambiguity)
 
 Friction: UK-based with travel to Shoreditch office; ATS body wants AI-native operating model owner.

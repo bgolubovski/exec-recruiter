@@ -18,7 +18,7 @@ The user names a role by company or by slug. Resolve to:
 - `company` (string)
 - `role_title` (string)
 - `linkedin_url` (the `/jobs/view/{id}/` URL)
-- `slug` (kebab-case, e.g. `company-role-slug`)
+- `slug` (kebab-case, e.g. `nplan-vp-product`)
 
 If the role is in the dashboard but no slug yet, generate one. If the role isn't in the dashboard, scaffold a minimal entry first.
 
@@ -94,7 +94,7 @@ The agent applies the discipline rules from `outreach-style.yaml`:
 - No em/en dashes anywhere
 - Geo header conditional
 
-Outputs `{cv_filename_prefix}-{slug}.docx` and `.pdf` in `outreach/{slug}/`.
+Outputs `Golubovski-Blagoja-CV-{slug}.docx` and `.pdf` in `outreach/{slug}/`.
 
 ### Step 5: Draft outreach
 
@@ -112,8 +112,8 @@ For role-specific anti-bot screener words detected in the JD body, draft a Summa
 
 Create `outreach/{slug}/` and write:
 
-- `{cv_filename_prefix}-{slug}.docx`
-- `{cv_filename_prefix}-{slug}.pdf`
+- `Golubovski-Blagoja-CV-{slug}.docx`
+- `Golubovski-Blagoja-CV-{slug}.pdf`
 - `jd.md` - JD notes from `${CLAUDE_PLUGIN_ROOT}/templates/jd.md.template`, populated
 - `outreach.md` - outreach drafts from `${CLAUDE_PLUGIN_ROOT}/templates/outreach.md.template`, populated
 

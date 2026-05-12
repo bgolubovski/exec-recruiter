@@ -102,7 +102,7 @@ After each user-confirmed send:
 2. Move the dashboard ROLES entry from `status: "drafted"` to `status: "pending"`
 3. Set `sendDate: "{today_yyyy_mm_dd}"`
 4. Update `channels` array with what was actually sent
-5. Set `sendName` to a short identifier like "primary-and-backup" or "single-contact"
+5. Set `sendName` to a short identifier like "alan-and-dev" or "kanav"
 6. Update the role's `note` field with the send log
 
 ### Step 7: Set follow-up watch

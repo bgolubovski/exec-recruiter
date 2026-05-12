@@ -1,122 +1,813 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>exec-recruiter dashboard</title>
+<meta charset="UTF-8">
+<title>CPO Job Search Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; max-width: 1100px; margin: 0 auto; color: #111; background: #fafafa; }
-  h1 { margin: 0 0 4px; font-size: 22px; font-weight: 500; }
-  .subtitle { color: #666; font-size: 14px; margin-bottom: 24px; }
-  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
-  .stat { background: white; border: 1px solid #e6e6e6; border-radius: 8px; padding: 14px; }
-  .stat-num { font-size: 24px; font-weight: 500; }
-  .stat-label { font-size: 12px; color: #666; }
-  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e6e6e6; border-radius: 8px; overflow: hidden; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
-  th { background: #f7f7f7; font-weight: 500; color: #333; }
-  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-  .green { background: #2ea043; }
-  .yellow { background: #d4a72c; }
-  .red { background: #cf222e; }
-  .gray { background: #999; }
-  .high { color: #2ea043; font-weight: 500; }
-  .med { color: #555; }
-  .low { color: #999; }
-  .filter-bar { margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .filter-bar button, .filter-bar input { padding: 6px 12px; border: 1px solid #d0d7de; background: white; border-radius: 6px; cursor: pointer; font-size: 13px; }
-  .filter-bar button.active { background: #0969da; color: white; border-color: #0969da; }
-  details { background: white; border: 1px solid #e6e6e6; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
-  summary { cursor: pointer; font-weight: 500; }
-  ul { margin: 8px 0; padding-left: 20px; font-size: 13px; }
-  ul li { margin-bottom: 4px; }
-  .empty-state { text-align: center; padding: 40px; color: #888; font-size: 14px; }
+  :root {
+    --bg: #0f1419;
+    --panel: #1a2028;
+    --panel-2: #232b35;
+    --border: #2d3743;
+    --text: #e6e8eb;
+    --text-dim: #8a95a3;
+    --accent: #4ea1ff;
+    --accent-2: #66d9ef;
+    --green: #5cd68a;
+    --yellow: #f5c542;
+    --red: #f56565;
+    --orange: #f59e42;
+    --purple: #b48ead;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .container { max-width: 1600px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 22px; margin: 0 0 4px 0; font-weight: 600; }
+  h2 { font-size: 16px; margin: 0 0 12px 0; font-weight: 600; color: var(--accent-2); }
+  h3 { font-size: 14px; margin: 0 0 8px 0; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-meta { font-size: 12px; color: var(--text-dim); }
+  .stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    flex: 1;
+  }
+  .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 24px; font-weight: 600; margin-top: 4px; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.dim { color: var(--text-dim); }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .actions-list { margin: 0; padding: 0; list-style: none; }
+  .actions-list li {
+    padding: 10px 12px;
+    background: var(--panel-2);
+    border-left: 3px solid var(--yellow);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .actions-list li.urgent { border-left-color: var(--red); }
+  .actions-list li.due-today { border-left-color: var(--orange); }
+  .actions-list li.fresh { border-left-color: var(--green); }
+  .actions-list a { color: var(--accent); text-decoration: none; }
+  .actions-list a:hover { text-decoration: underline; }
+  .filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-group { display: flex; gap: 6px; align-items: center; }
+  .filter-group label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .pill {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--text); }
+  .pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  input.search {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    width: 240px;
+  }
+  input.search:focus { border-color: var(--accent); }
+  td.order-num { color: var(--text-dim); font-variant-numeric: tabular-nums; font-size: 12px; text-align: right; padding-right: 8px; width: 32px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 13px;
+  }
+  thead {
+    background: var(--panel-2);
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th:hover { color: var(--text); }
+  th .sort-arrow { display: inline-block; width: 10px; opacity: 0.5; font-size: 10px; }
+  th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--panel-2); }
+  tr.skipped td { opacity: 0.55; }
+  tr.rejected td { opacity: 0.55; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .badge.pending { background: rgba(78, 161, 255, 0.15); color: var(--accent); border: 1px solid rgba(78, 161, 255, 0.3); }
+  .badge.replied { background: rgba(92, 214, 138, 0.15); color: var(--green); border: 1px solid rgba(92, 214, 138, 0.3); }
+  .badge.skipped { background: rgba(138, 149, 163, 0.15); color: var(--text-dim); border: 1px solid var(--border); }
+  .badge.rejected { background: rgba(245, 101, 101, 0.15); color: var(--red); border: 1px solid rgba(245, 101, 101, 0.3); }
+  .badge.closed { background: rgba(245, 101, 101, 0.15); color: var(--red); border: 1px solid rgba(245, 101, 101, 0.3); }
+  .badge.prepped { background: rgba(245, 158, 66, 0.15); color: var(--orange); border: 1px solid rgba(245, 158, 66, 0.3); }
+  .score {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--purple), var(--accent));
+    color: var(--bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .score.high { background: linear-gradient(90deg, var(--green), var(--accent-2)); color: var(--bg); }
+  .score.med { background: linear-gradient(90deg, var(--yellow), var(--orange)); color: var(--bg); }
+  .score.low { background: var(--text-dim); color: var(--bg); }
+  .file-links {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .file-link {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .file-link:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .role-name { font-weight: 600; color: var(--text); }
+  .company { color: var(--text-dim); font-size: 12px; margin-top: 2px; }
+  .meta { font-size: 11px; color: var(--text-dim); }
+  a.contact { color: var(--accent); text-decoration: none; }
+  a.contact:hover { text-decoration: underline; }
+  .urgency-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+  .urgency-dot.green { background: var(--green); }
+  .urgency-dot.yellow { background: var(--yellow); }
+  .urgency-dot.red { background: var(--red); }
+  .urgency-dot.gray { background: var(--text-dim); }
+  details { margin-top: 16px; }
+  details summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 8px 0;
+  }
+  details summary:hover { color: var(--accent); }
+  .channel-tag {
+    display: inline-block;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-right: 4px;
+    margin-bottom: 2px;
+  }
+  .footer {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  /* Calendar view (5-day card grid with week nav) */
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .cal-nav {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .cal-btn {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+  }
+  .cal-btn:hover { background: var(--border); }
+  .cal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cal-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .cal-btn.primary:hover { background: #3a8fee; }
+  .cal-range-label { font-size: 13px; color: var(--text-dim); }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  .cal-grid.expanded { grid-template-columns: repeat(7, 1fr); }
+  @media (max-width: 1000px) {
+    .cal-grid, .cal-grid.expanded { grid-template-columns: repeat(2, 1fr); }
+  }
+  .cal-card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 10px 12px 10px;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    transition: border-color 0.15s;
+  }
+  .cal-card:hover { border-color: var(--accent); }
+  .cal-card.today { border-color: var(--accent); border-width: 2px; padding: 9px 9px 11px 9px; }
+  .cal-card.has-urgent { border-left: 3px solid var(--red); padding-left: 8px; }
+  .cal-card.has-mid { border-left: 3px solid var(--yellow); padding-left: 8px; }
+  .cal-card.has-soft { border-left: 3px solid var(--green); padding-left: 8px; }
+  .cal-card.weekend { opacity: 0.55; }
+  .cal-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .cal-date {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .cal-date .day-suffix { color: var(--text-dim); font-weight: 400; font-size: 11px; margin-left: 4px; text-transform: uppercase; }
+  .cal-count {
+    background: var(--bg);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 11px;
+    min-width: 20px;
+    text-align: center;
+  }
+  .cal-count.has-roles { background: var(--orange); color: var(--bg); border-color: var(--orange); font-weight: 600; }
+  .cal-action {
+    margin-bottom: 4px;
+  }
+  .cal-action-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 3px;
+  }
+  .cal-action-label.hard { color: var(--red); }
+  .cal-action-label.mid { color: var(--yellow); }
+  .cal-action-label.soft { color: var(--green); }
+  .cal-role-mini {
+    display: inline-block;
+    font-size: 10px;
+    color: var(--text);
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin: 2px 3px 2px 0;
+    border: 1px solid var(--border);
+    line-height: 1.4;
+  }
+  .cal-role-mini a { color: var(--text); text-decoration: none; }
+  .cal-role-mini a:hover { color: var(--accent); }
+  .cal-empty { color: var(--text-dim); font-size: 11px; font-style: italic; }
+  .cal-foot {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 11px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+  .cal-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .cal-legend-swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* === Funnel widget === */
+  .funnel { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: stretch; }
+  @media (max-width: 1000px) { .funnel { grid-template-columns: repeat(2, 1fr); } }
+  .funnel-stage {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .funnel-stage.active { border-color: var(--accent); }
+  .funnel-bar {
+    position: absolute; left: 0; bottom: 0; height: 3px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .funnel-stage.s-sent .funnel-bar { background: var(--accent); }
+  .funnel-stage.s-accepted .funnel-bar { background: var(--accent-2); }
+  .funnel-stage.s-replied .funnel-bar { background: var(--green); }
+  .funnel-stage.s-interview .funnel-bar { background: var(--yellow); }
+  .funnel-stage.s-closed .funnel-bar { background: var(--text-dim); }
+  .funnel-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .funnel-value { font-size: 22px; font-weight: 600; margin: 4px 0; color: var(--text); }
+  .funnel-pct { font-size: 11px; color: var(--text-dim); }
+  .funnel-pct .delta { color: var(--green); font-weight: 600; }
+  .funnel-pct .delta.bad { color: var(--red); }
+
+  /* === Hot signals strip === */
+  .hot-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .hot-item {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .hot-item.profile-view { border-left-color: var(--accent); }
+  .hot-item.accepted { border-left-color: var(--green); }
+  .hot-item.replied { border-left-color: var(--yellow); }
+  .hot-item.screener { border-left-color: var(--accent-2); }
+  .hot-icon {
+    font-size: 14px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .hot-meta { color: var(--text-dim); font-size: 11px; margin-left: auto; }
+  .hot-empty { color: var(--text-dim); font-style: italic; padding: 8px 12px; font-size: 12px; }
+
+  /* === Cohort timeline === */
+  .cohort-row {
+    display: grid;
+    grid-template-columns: 110px 70px repeat(5, 1fr) 90px;
+    gap: 6px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    align-items: center;
+  }
+  .cohort-row.head {
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+  }
+  .cohort-row:last-child { border-bottom: none; }
+  .cohort-cell { text-align: center; padding: 2px 0; border-radius: 3px; }
+  .cohort-cell.sent { color: var(--text); font-weight: 600; }
+  .cohort-cell.accepted { color: var(--accent-2); }
+  .cohort-cell.replied { color: var(--green); }
+  .cohort-cell.rejected { color: var(--red); }
+  .cohort-cell.silent { color: var(--text-dim); }
+  .cohort-pct-bar {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 6px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 2px;
+  }
+  .cohort-pct-fill {
+    height: 100%;
+    background: var(--green);
+  }
+  .cohort-pct-fill.partial { background: var(--yellow); }
+  .cohort-pct-fill.bad { background: var(--red); }
+  .cohort-pct-text { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+
+  /* === Score histogram === */
+  .hist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hist-bar {
+    display: grid;
+    grid-template-columns: 70px 1fr 40px;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .hist-label { color: var(--text-dim); }
+  .hist-track {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    height: 14px;
+    overflow: hidden;
+  }
+  .hist-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .hist-fill.tier1 { background: var(--green); }
+  .hist-fill.tier2 { background: var(--yellow); }
+  .hist-fill.lower { background: var(--text-dim); }
+  .hist-count { text-align: right; color: var(--text); font-weight: 600; }
+
+  /* === Domain breakdown chips === */
+  .domain-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .domain-chip {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .domain-chip .dcount {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 0 6px;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 10px;
+  }
+
+  /* === Two-column row for histogram + domain === */
+  .two-col-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 1000px) { .two-col-row { grid-template-columns: 1fr; } }
+
+  /* === Table compact mode === */
+  .table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .table-toolbar label { cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+  .compact .col-location, .compact .col-comp, .compact .col-channels, .compact .col-sent, .compact .col-status { display: none; }
+
+  /* === Clickable cards (filter affordance) === */
+  .stat.clickable, .funnel-stage, .hist-bar, .domain-chip, .cohort-row:not(.head) {
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.15s, background 0.15s;
+  }
+  .stat.clickable:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .funnel-stage:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .hist-bar:hover .hist-label { color: var(--text); }
+  .hist-bar:hover .hist-track { border-color: var(--accent); }
+  .domain-chip:hover { border-color: var(--accent); background: var(--panel); color: var(--accent); }
+  .cohort-row:not(.head):hover { background: var(--panel-2); }
+  .cal-card:not(.weekend) { cursor: pointer; }
+  .cal-card.today { cursor: pointer; }
+
+  /* === Notes drawer (expand row) === */
+  .roles-table tr.note-drawer-row { background: var(--panel-2); }
+  .roles-table tr.note-drawer-row td {
+    padding: 12px 16px;
+    border-top: 1px dashed var(--border);
+  }
+  .note-drawer {
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.55;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .note-expand-btn {
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 11px;
+    text-decoration: none;
+    margin-left: 4px;
+  }
+  .note-expand-btn:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
-<h1>exec-recruiter dashboard</h1>
-<div class="subtitle" id="todayLabel">Loading...</div>
+<div class="container">
 
-<details>
-  <summary>How to update this dashboard</summary>
-  <p style="font-size: 13px; color: #555;"><strong>To add a role:</strong> Append to <code>const ROLES = [...]</code> with the same shape as existing rows. Save and reload.</p>
-  <p style="font-size: 13px; color: #555;"><strong>To update a role:</strong> Edit the JS data block at the bottom of this file and change the status field. The dashboard recomputes stats and "Today's Actions" automatically.</p>
-  <p style="font-size: 13px; color: #555;"><strong>Inbound signals (passive log):</strong></p>
-  <ul>
-    <li>(no inbound signals yet)</li>
-  </ul>
-</details>
+  <div class="header">
+    <div>
+      <h1>CPO Job Search Dashboard</h1>
+      <div class="header-meta" id="headerSubtitle">Live tracker · stats below recompute automatically · Daily sweep at 9am + 5pm Lisbon</div>
+    </div>
+    <div class="header-meta" id="todayLabel"></div>
+  </div>
 
-<div class="stats" id="stats"></div>
+  <div class="panel">
+    <h2>Pipeline Funnel</h2>
+    <div class="funnel" id="funnelWidget"></div>
+  </div>
 
-<details open>
-  <summary>Today's actions</summary>
-  <ul id="todayActions"><li>(loaded after dashboard renders)</li></ul>
-</details>
+  <div class="stats">
+    <div class="stat clickable" data-filter="total"><div class="stat-label">Total Roles</div><div class="stat-value" id="statTotal">26</div></div>
+    <div class="stat clickable" data-filter="pending"><div class="stat-label">Sent (Pending)</div><div class="stat-value green" id="statPending">23</div></div>
+    <div class="stat clickable" data-filter="replied"><div class="stat-label">Replied</div><div class="stat-value yellow" id="statReplied">1</div></div>
+    <div class="stat clickable" data-filter="skipped-rejected"><div class="stat-label">Skipped / Rejected</div><div class="stat-value dim" id="statSkipped">2</div></div>
+    <div class="stat clickable" data-filter="due-today"><div class="stat-label">Due Bumps Today</div><div class="stat-value red" id="statDue">0</div></div>
+    <div class="stat"><div class="stat-label">InMail Credits Left</div><div class="stat-value yellow" id="statInMail">2</div></div>
+  </div>
 
-<div class="filter-bar">
-  <button data-filter-status="all" class="active">All</button>
-  <button data-filter-status="pending">Pending</button>
-  <button data-filter-status="drafted">Drafted</button>
-  <button data-filter-status="replied">Replied</button>
-  <button data-filter-status="rejected">Rejected</button>
-  <button data-filter-status="skipped">Skipped</button>
-  <input type="text" id="searchBox" placeholder="Search company / role..." style="margin-left: auto; min-width: 220px;">
+  <div class="panel">
+    <h2>Hot Signals <span style="font-size: 12px; color: var(--text-dim); font-weight: 400; margin-left: 6px;">engagement events in the last 14 days</span></h2>
+    <div class="hot-strip" id="hotSignals"></div>
+  </div>
+
+
+  <div class="panel">
+    <div class="cal-header">
+      <h2 style="margin: 0;">Follow-up Calendar</h2>
+      <div class="cal-nav">
+        <button class="cal-btn" id="calPrev" title="Previous window">← Prev</button>
+        <button class="cal-btn primary" id="calToday" title="Jump to today">Today</button>
+        <button class="cal-btn" id="calNext" title="Next window">Next →</button>
+        <button class="cal-btn" id="calExpand" title="Toggle 5/7 day view">Expand to 7</button>
+        <span class="cal-range-label" id="calRangeLabel"></span>
+      </div>
+    </div>
+    <div id="followupSchedule" class="cal-grid"></div>
+    <div class="cal-foot">
+      <span class="cal-legend-item"><span class="cal-legend-swatch" style="background:var(--red);"></span>Day-10 final / pivot to backup</span>
+      <span class="cal-legend-item"><span class="cal-legend-swatch" style="background:var(--yellow);"></span>Day-7 last bump day</span>
+      <span class="cal-legend-item"><span class="cal-legend-swatch" style="background:var(--green);"></span>Day-5 bump window opens</span>
+      <span class="cal-legend-item"><span class="cal-legend-swatch" style="background:var(--accent);"></span>Today</span>
+      <span class="cal-legend-item" style="margin-left:auto;color:var(--text-dim);font-style:italic;">Click "today" card to open full action list</span>
+    </div>
+    <div id="todayActionsDrawer" style="display:none; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+      <h3 style="font-size:13px;margin:0 0 10px 0;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;">Today's Actions (full list)</h3>
+      <ul class="actions-list" id="todayActions"></ul>
+    </div>
+  </div>
+
+  <div class="two-col-row">
+    <div class="panel" style="margin-bottom: 0;">
+      <h2>Pending by Score</h2>
+      <div class="hist" id="scoreHist"></div>
+    </div>
+    <div class="panel" style="margin-bottom: 0;">
+      <h2>Pending by Domain</h2>
+      <div class="domain-chips" id="domainChips"></div>
+    </div>
+  </div>
+  <div style="height: 20px;"></div>
+
+  <div class="panel">
+    <h2>Cohort Performance <span style="font-size: 12px; color: var(--text-dim); font-weight: 400; margin-left: 6px;">group by send week — see what's converting</span></h2>
+    <div id="cohortGrid"></div>
+  </div>
+
+  <h2 id="rolesHeader">Roles <span id="roleCount" style="font-size: 13px; color: var(--text-dim); font-weight: 400; margin-left: 8px;"></span></h2>
+
+  <div id="filterPill" style="display:none; align-items:center; gap:10px; background:var(--panel-2); border:1px solid var(--accent); border-radius:6px; padding:8px 14px; margin-bottom:10px; font-size:13px;">
+    <span style="color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Filter:</span>
+    <span id="filterPillLabel" style="color:var(--text); font-weight:600;"></span>
+    <span id="filterPillCount" style="color:var(--text-dim); font-size:12px;"></span>
+    <button class="cal-btn" id="clearFilter" style="margin-left:auto;">Clear ×</button>
+  </div>
+
+  <div class="table-toolbar">
+    <label><input type="checkbox" id="compactToggle"> Compact view (hide Location / Comp / Channels / Sent / Status badge)</label>
+    <span style="color: var(--text-dim);">·</span>
+    <span style="color: var(--text-dim);">Click any card above to filter · click a row note "..." to expand</span>
+  </div>
+
+  <details style="margin: 0 0 12px 0; font-size: 12px; color: var(--text-dim);">
+    <summary style="cursor: pointer; user-select: none; color: var(--accent);">Status definitions</summary>
+    <div style="margin-top: 8px; padding: 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 6px; line-height: 1.6;">
+      <div><strong style="color: var(--yellow);">Pending</strong> &mdash; outreach sent, awaiting response. Day-5 / Day-7 / Day-10 bumps fire automatically based on send date.</div>
+      <div><strong style="color: var(--accent);">Prepped</strong> &mdash; packet built (CV / cover letter / Connect-Note ready) but not yet sent. Awaiting user greenlight. No send date.</div>
+      <div><strong style="color: var(--green);">Replied</strong> &mdash; substantive response received (interview invite, recruiter call, hiring-manager engagement). Active conversation.</div>
+      <div><strong style="color: var(--red);">Rejected</strong> &mdash; employer formally declined the application (template rejection email, ATS auto-reject, recruiter "no" reply, etc.). Engagement happened, outcome was no.</div>
+      <div><strong style="color: var(--text-dim);">Skipped</strong> &mdash; never pursued substantively. Pre-emptive decision based on hard blocker (clearance, on-site geo, hard domain gate), low fit score, role withdrawn by employer before applying, or downgraded after pre-send check.</div>
+      <div><strong style="color: var(--text-dim);">Closed</strong> &mdash; reserved for late-stage process ends (interviewed, took home assignment, finalist round) where the engagement got past initial screen but ended without offer. Distinct from rejected (which is upfront-no) and replied (which is still active).</div>
+    </div>
+  </details>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label>Status:</label>
+      <span class="pill active" data-filter="status" data-value="all">All</span>
+      <span class="pill" data-filter="status" data-value="queued">Queued (Sourced)</span>
+      <span class="pill" data-filter="status" data-value="drafted">Drafted (Ready to Send)</span>
+      <span class="pill" data-filter="status" data-value="pending">Pending (Sent)</span>
+      <span class="pill" data-filter="status" data-value="prepped">Prepped (To Send)</span>
+      <span class="pill" data-filter="status" data-value="replied">Replied</span>
+      <span class="pill" data-filter="status" data-value="rejected">Rejected</span>
+      <span class="pill" data-filter="status" data-value="skipped">Skipped</span>
+      <span class="pill" data-filter="status" data-value="closed">Closed</span>
+    </div>
+    <div class="filter-group">
+      <label>Channel:</label>
+      <span class="pill active" data-filter="channel" data-value="all">All</span>
+      <span class="pill" data-filter="channel" data-value="DM">DM</span>
+      <span class="pill" data-filter="channel" data-value="InMail">InMail</span>
+      <span class="pill" data-filter="channel" data-value="EasyApply">Easy Apply</span>
+      <span class="pill" data-filter="channel" data-value="Careers">Careers</span>
+    </div>
+    <input type="text" class="search" id="searchBox" placeholder="Search role, company, contact...">
+  </div>
+
+  <table id="rolesTable">
+    <thead>
+      <tr>
+        <th data-sort="id">ID <span class="sort-arrow"></span></th>
+        <th data-sort="urgency">! <span class="sort-arrow"></span></th>
+        <th data-sort="score" class="sorted">Score <span class="sort-arrow">▼</span></th>
+        <th data-sort="role">Role <span class="sort-arrow"></span></th>
+        <th data-sort="company">Company <span class="sort-arrow"></span></th>
+        <th class="col-location" data-sort="location">Location <span class="sort-arrow"></span></th>
+        <th class="col-comp" data-sort="comp">Comp <span class="sort-arrow"></span></th>
+        <th data-sort="contact">Hiring Contact <span class="sort-arrow"></span></th>
+        <th class="col-channels" data-sort="channels">Channels <span class="sort-arrow"></span></th>
+        <th class="col-sent" data-sort="sent">Sent <span class="sort-arrow"></span></th>
+        <th data-sort="next">Next Action <span class="sort-arrow"></span></th>
+        <th class="col-status" data-sort="status">Status <span class="sort-arrow"></span></th>
+        <th>Files</th>
+      </tr>
+    </thead>
+    <tbody id="rolesBody"></tbody>
+  </table>
+
+  <details>
+    <summary>How to use this dashboard</summary>
+    <div class="panel">
+      <p><strong>Cadence:</strong> Open this every other day. The "Today's Actions" panel surfaces roles where Day 5-7 follow-up bumps are due (yellow), Day 10 final actions are due (orange), and overdue roles (red).</p>
+      <p><strong>Sorting:</strong> Click any column header. Default sort is by Score descending.</p>
+      <p><strong>Filters:</strong> Use the pill filters to narrow by status or channel. Search box matches across role/company/contact.</p>
+      <p><strong>File links per row:</strong></p>
+      <ul>
+        <li><b>JD</b> → opens local jd.md (saved at fetch time)</li>
+        <li><b>JD↗</b> → opens LinkedIn listing (live, may be closed)</li>
+        <li><b>CV</b> → opens tailored PDF in your folder</li>
+        <li><b>DM</b> → opens the SEND-{name}.txt that was paste-sent</li>
+        <li><b>Status</b> → opens status.md with the full role timeline + follow-up cadence</li>
+      </ul>
+      <p><strong>To update:</strong> When a role replies, edit the JS data block in this file (look for <code>const ROLES = [...]</code> near the bottom) and change the status field. The dashboard recomputes stats and "Today's Actions" automatically.</p>
+      <p><strong>To add a new role:</strong> Append to <code>const ROLES = [...]</code> with the same shape as existing rows. Save and reload.</p>
+      <p><strong>Inbound signals (passive log):</strong></p>
+      <ul>
+        <li>2026-05-08: Dev Amratia (nPlan CEO) viewed profile after Connect+Note send. Hold posture.</li>
+        <li>2026-05-08: Alexey Vatolin (Talent Acquisition Lead, Forex/CFD broker, MENA+ASEAN markets, Lithuania) viewed profile. Independent of nPlan/Innovaccer pipelines. Geo (likely Cyprus/Dubai/Singapore) and sector (Forex/CFD retail trading) outside stated criteria. Hold; respond if he reaches out, do not initiate. <a href="https://www.linkedin.com/in/alexeyvatolin/">profile</a></li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="footer">
+    Saved at <code>~/Projects/CPO/career/dashboard.html</code> · Markdown summary at <code>~/Projects/CPO/career/dashboard.md</code> · Per-role files in <code>~/Projects/CPO/career/outreach/{slug}/</code>
+  </div>
+
 </div>
 
-<table id="rolesTable">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Role / Company</th>
-      <th>Score</th>
-      <th>Geo</th>
-      <th>Channels</th>
-      <th>Status</th>
-      <th>Send</th>
-    </tr>
-  </thead>
-  <tbody id="rolesBody"></tbody>
-</table>
-
 <script>
-const TODAY = new Date();
+const TODAY = new Date(); // user opens dashboard => today
 const TODAY_STR = TODAY.toISOString().slice(0, 10);
 document.getElementById('todayLabel').textContent = 'Today: ' + TODAY_STR;
 
-function daysBetween(a, b) {
-  const aD = new Date(a + 'T00:00:00Z');
-  const bD = new Date(b + 'T00:00:00Z');
-  return Math.floor((bD - aD) / (1000 * 60 * 60 * 24));
+// Compute days between dates
+function daysBetween(d1, d2) {
+  const a = new Date(d1);
+  const b = new Date(d2);
+  return Math.round((b - a) / (1000 * 60 * 60 * 24));
 }
 
-function dayName(d) {
-  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getUTCDay()];
+// Push a date to the next weekday if it lands on Sat/Sun
+function nextWeekday(d) {
+  const out = new Date(d);
+  const day = out.getDay(); // 0=Sun, 6=Sat
+  if (day === 6) out.setDate(out.getDate() + 2); // Sat → Mon
+  else if (day === 0) out.setDate(out.getDate() + 1); // Sun → Mon
+  return out;
 }
 
-function followUpForRole(role) {
-  if (!role.sendDate) return null;
-  const send = new Date(role.sendDate + 'T00:00:00Z');
-  const day5 = new Date(send); day5.setUTCDate(day5.getUTCDate() + 5);
-  const day7 = new Date(send); day7.setUTCDate(day7.getUTCDate() + 7);
-  const day10 = new Date(send); day10.setUTCDate(day10.getUTCDate() + 10);
-  const daysSince = daysBetween(role.sendDate, TODAY_STR);
-  if (daysSince < 5) return { date: day5.toISOString().slice(0,10), label: 'Day 5 bump', urgency: 'green' };
-  if (daysSince <= 7) return { date: day7.toISOString().slice(0,10), label: 'Day ' + daysSince + ' bump (DUE)', urgency: 'yellow' };
+// Compute next-action date based on send date and current status
+function nextActionDate(sendDate, status) {
+  if (status === 'skipped' || status === 'closed' || status === 'replied' || status === 'rejected') return null;
+  if (!sendDate) return null; // PREP-STATE rows (no sendDate yet) - avoid 1970 epoch fallback
+  const sent = new Date(sendDate);
+  const day7raw = new Date(sent); day7raw.setDate(sent.getDate() + 7);
+  const day10raw = new Date(sent); day10raw.setDate(sent.getDate() + 10);
+  const day7 = nextWeekday(day7raw);
+  const day10 = nextWeekday(day10raw);
+  const daysSince = daysBetween(sendDate, TODAY_STR);
+  if (daysSince < 5) return { date: day7.toISOString().slice(0,10), label: 'Day 5-7 bump', urgency: 'green' };
+  if (daysSince <= 7) return { date: day7.toISOString().slice(0,10), label: 'Day 5-7 bump (DUE)', urgency: 'yellow' };
   if (daysSince <= 10) return { date: day10.toISOString().slice(0,10), label: 'Day 10 final (DUE)', urgency: 'red' };
   return { date: day10.toISOString().slice(0,10), label: 'Overdue Day 10', urgency: 'red' };
 }
 
 const ROLES = [
-  // Append role entries here. Schema:
+  // Populated by phase-1-sweep / phase-2-packet / phase-3-send workflows.
+  // Example entry shape:
   // {
-  //   id: <int>, slug: "<kebab-case>",
-  //   role: "<title>", company: "<company>",
-  //   location: "<location>", comp: "<comp band>", score: <0-10>,
-  //   jdUrl: "<url>",
-  //   contact: "<name + role>", contactUrl: "<linkedin>",
-  //   channels: ["..."], sendDate: "YYYY-MM-DD" | null, status: "drafted" | "pending" | "replied" | "rejected" | "skipped",
-  //   sendName: "<sendName>" | null, note: "<long-form note>"
-  // }
+  //   id: 1, slug: "company-role-slug",
+  //   role: "VP of Product", company: "ExampleCo",
+  //   location: "London, UK · Hybrid", comp: "Not stated", score: 7.5,
+  //   jdUrl: "https://www.linkedin.com/jobs/view/.../",
+  //   contact: "Jane Smith (CPO)", contactUrl: "https://www.linkedin.com/in/...",
+  //   channels: ["Careers", "Connect+Note"], sendDate: null, status: "pending",
+  //   sendName: "jane-connect", note: "Free-form rationale, friction flags, anchors"
+  // },
 ];
 
 function scoreClass(s) {
@@ -137,90 +828,750 @@ function urgencyDot(role) {
 }
 
 function fileLinkPath(slug, filename) {
-  return '../outreach/' + slug + '/' + filename;
+  return 'outreach/' + slug + '/' + filename;
 }
 
-let activeFilters = { status: 'all', search: '' };
+let currentSort = { col: 'score', dir: 'desc' };
+let activeFilters = { status: 'all', channel: 'all', search: '', idSet: null, label: null };
 
-function renderStats() {
-  const stats = { total: ROLES.length, pending: 0, replied: 0, rejected: 0, skipped: 0, fresh: 0, bump: 0, overdue: 0 };
-  ROLES.forEach(r => {
-    if (r.status === 'pending' || r.status === 'drafted') stats.pending++;
-    else if (r.status === 'replied') stats.replied++;
-    else if (r.status === 'rejected') stats.rejected++;
-    else if (r.status === 'skipped') stats.skipped++;
-    if (r.sendDate && r.status !== 'rejected' && r.status !== 'skipped') {
-      const d = daysBetween(r.sendDate, TODAY_STR);
-      if (d < 5) stats.fresh++;
-      else if (d <= 7) stats.bump++;
-      else if (d <= 10) stats.overdue++;
+function getFilteredRoles() {
+  return ROLES.filter(r => {
+    if (activeFilters.idSet && !activeFilters.idSet.has(r.id)) return false;
+    if (activeFilters.status !== 'all' && r.status !== activeFilters.status) return false;
+    if (activeFilters.channel !== 'all' && !r.channels.some(c => c.toLowerCase().includes(activeFilters.channel.toLowerCase()))) return false;
+    if (activeFilters.search) {
+      const q = activeFilters.search.toLowerCase();
+      const blob = (r.role + ' ' + r.company + ' ' + r.contact + ' ' + r.location).toLowerCase();
+      if (!blob.includes(q)) return false;
     }
+    return true;
   });
-  document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="stat-num">${stats.total}</div><div class="stat-label">Total roles</div></div>
-    <div class="stat"><div class="stat-num">${stats.pending}</div><div class="stat-label">Pending</div></div>
-    <div class="stat"><div class="stat-num">${stats.bump}</div><div class="stat-label">Bump window</div></div>
-    <div class="stat"><div class="stat-num">${stats.overdue}</div><div class="stat-label">Day 10+</div></div>
-    <div class="stat"><div class="stat-num">${stats.replied}</div><div class="stat-label">Replied</div></div>
-  `;
 }
 
-function renderTodayActions() {
-  const items = [];
-  ROLES.forEach(r => {
-    if (r.status === 'rejected' || r.status === 'skipped' || r.status === 'replied') return;
-    if (!r.sendDate) return;
-    const d = daysBetween(r.sendDate, TODAY_STR);
-    if (d === 5 || d === 6 || d === 7) items.push(`Day ${d} bump: <strong>${r.company}</strong> - ${r.role}`);
-    else if (d >= 10) items.push(`Day ${d} final action: <strong>${r.company}</strong> - ${r.role}`);
+function getSortedRoles() {
+  const rows = getFilteredRoles();
+  const col = currentSort.col;
+  const dir = currentSort.dir === 'asc' ? 1 : -1;
+  return rows.slice().sort((a, b) => {
+    let av, bv;
+    if (col === 'score') { av = a.score; bv = b.score; }
+    else if (col === 'id') { av = a.id; bv = b.id; }
+    else if (col === 'sent') { av = a.sendDate || ''; bv = b.sendDate || ''; }
+    else if (col === 'next') {
+      const an = nextActionDate(a.sendDate, a.status); av = an ? an.date : 'zzzz';
+      const bn = nextActionDate(b.sendDate, b.status); bv = bn ? bn.date : 'zzzz';
+    }
+    else if (col === 'urgency') {
+      const order = { red: 1, yellow: 2, green: 3, gray: 4 };
+      av = order[urgencyDot(a).cls]; bv = order[urgencyDot(b).cls];
+    }
+    else if (col === 'channels') { av = a.channels.join(','); bv = b.channels.join(','); }
+    else { av = (a[col] || '').toString(); bv = (b[col] || '').toString(); }
+    if (av < bv) return -1 * dir;
+    if (av > bv) return 1 * dir;
+    return 0;
   });
-  const el = document.getElementById('todayActions');
-  el.innerHTML = items.length ? items.map(s => '<li>' + s + '</li>').join('') : '<li>(no actions due today)</li>';
 }
 
-function renderRoles() {
+function renderRows() {
+  const rows = getSortedRoles();
   const tbody = document.getElementById('rolesBody');
-  if (!ROLES.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No roles yet. Run Phase 1 sweep to add roles.</td></tr>';
-    return;
-  }
-  let rows = ROLES.slice();
-  if (activeFilters.status !== 'all') rows = rows.filter(r => r.status === activeFilters.status);
-  if (activeFilters.search) {
-    const s = activeFilters.search.toLowerCase();
-    rows = rows.filter(r => (r.company + ' ' + r.role).toLowerCase().includes(s));
-  }
-  rows.sort((a, b) => (b.sendDate || '').localeCompare(a.sendDate || '') || (b.score - a.score));
   tbody.innerHTML = rows.map(r => {
-    const dot = urgencyDot(r);
-    return `<tr>
-      <td><span class="dot ${dot.cls}"></span></td>
-      <td><strong>${r.role}</strong><br><span style="color: #666;">${r.company}</span></td>
-      <td><span class="${scoreClass(r.score)}">${r.score.toFixed(1)}</span></td>
-      <td>${r.location}</td>
-      <td>${(r.channels || []).join(', ')}</td>
-      <td>${r.status}<br><span style="color: #999; font-size: 11px;">${dot.label}</span></td>
-      <td>${r.sendDate || '-'}</td>
-    </tr>`;
+    const u = urgencyDot(r);
+    const next = nextActionDate(r.sendDate, r.status);
+    const skippedClass = r.status === 'skipped' ? ' class="skipped"' : (r.status === 'rejected' ? ' class="rejected"' : '');
+    const sendNameLink = r.sendName ? '<a class="file-link" href="' + fileLinkPath(r.slug, 'SEND-' + r.sendName + '.txt') + '" target="_blank">DM</a>' : '';
+    const contactLink = r.contactUrl ? '<a class="contact" href="' + r.contactUrl + '" target="_blank">' + r.contact + '</a>' : r.contact;
+    // Truncate note for cell display + add expand link
+    const fullNote = (r.note || '').replace(/"/g, '&quot;');
+    const noteSnippet = fullNote.length > 100 ? fullNote.slice(0, 100) + '...' : fullNote;
+    const noteExpand = fullNote.length > 100 ? ' <a class="note-expand-btn" data-role-id="' + r.id + '">[expand]</a>' : '';
+    return '<tr' + skippedClass + ' data-row-id="' + r.id + '">'
+      + '<td class="order-num">' + r.id + '</td>'
+      + '<td><span class="urgency-dot ' + u.cls + '"></span></td>'
+      + '<td><span class="score ' + scoreClass(r.score) + '">' + r.score.toFixed(1) + '</span></td>'
+      + '<td><div class="role-name">' + r.role + '</div><div class="meta">' + noteSnippet + noteExpand + '</div></td>'
+      + '<td><div>' + r.company + '</div></td>'
+      + '<td class="col-location">' + r.location + '</td>'
+      + '<td class="col-comp">' + r.comp + '</td>'
+      + '<td>' + contactLink + '</td>'
+      + '<td class="col-channels">' + r.channels.map(c => '<span class="channel-tag">' + c + '</span>').join('') + '</td>'
+      + '<td class="col-sent">' + (r.sendDate || '-') + '</td>'
+      + '<td>' + (next ? next.label + '<div class="meta">' + next.date + '</div>' : '-') + '</td>'
+      + '<td class="col-status"><span class="badge ' + r.status + '">' + r.status + '</span></td>'
+      + '<td><div class="file-links">'
+        + '<a class="file-link" href="' + fileLinkPath(r.slug, 'jd.md') + '" target="_blank">JD</a>'
+        + '<a class="file-link" href="' + r.jdUrl + '" target="_blank">JD↗</a>'
+        + '<a class="file-link" href="' + fileLinkPath(r.slug, 'Golubovski-Blagoja-CV-' + r.slug + '.pdf') + '" target="_blank">CV</a>'
+        + sendNameLink
+        + '<a class="file-link" href="' + fileLinkPath(r.slug, 'status.md') + '" target="_blank">Status</a>'
+      + '</div></td>'
+    + '</tr>';
+  }).join('');
+  updateRoleCount(rows.length);
+}
+
+function updateRoleCount(filteredCount) {
+  const total = ROLES.length;
+  const el = document.getElementById('roleCount');
+  if (!el) return;
+  const filtersActive = activeFilters.status !== 'all' || activeFilters.channel !== 'all' || activeFilters.search;
+  if (filtersActive) {
+    el.textContent = 'Showing ' + filteredCount + ' of ' + total;
+  } else {
+    el.textContent = total + ' total';
+  }
+}
+
+function renderActions() {
+  const list = document.getElementById('todayActions');
+  const due = ROLES.filter(r => {
+    if (r.status !== 'pending' || !r.sendDate) return false;
+    const days = daysBetween(r.sendDate, TODAY_STR);
+    return days >= 5;
+  });
+  if (due.length === 0) {
+    const fresh = ROLES.filter(r => r.status === 'pending').length;
+    // Compute next bump-eligible date (Day-5 from earliest pending send)
+    const pendingSends = ROLES.filter(r => r.status === 'pending' && r.sendDate).map(r => r.sendDate).sort();
+    let nextBumpDate = '-';
+    if (pendingSends.length > 0) {
+      const earliest = new Date(pendingSends[0]);
+      earliest.setDate(earliest.getDate() + 5);
+      nextBumpDate = nextWeekday(earliest).toISOString().slice(0, 10);
+    }
+    list.innerHTML = '<li class="fresh">No bumps due today. ' + fresh + ' pending roles still in fresh-window (under 5 days since send). Next bump-eligible date: <strong>' + nextBumpDate + '</strong>.</li>';
+  } else {
+    list.innerHTML = due.map(r => {
+      const days = daysBetween(r.sendDate, TODAY_STR);
+      const urgencyCls = days > 10 ? 'urgent' : days > 7 ? 'urgent' : 'due-today';
+      const action = days > 7 ? 'Send Day-10 final action (formal apply / pivot to backup contact)' : 'Send Day 5-7 LinkedIn bump';
+      const link = '<a href="outreach/' + r.slug + '/status.md" target="_blank">' + r.role + ' @ ' + r.company + '</a>';
+      return '<li class="' + urgencyCls + '"><strong>' + days + 'd since send · </strong> ' + link + ' → ' + action + '</li>';
+    }).join('');
+  }
+  document.getElementById('statDue').textContent = due.length;
+}
+
+function fmtDate(d) {
+  return d.toISOString().slice(0, 10);
+}
+function dayName(d) {
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+}
+
+// Compute action milestones for each pending role: returns {date, action, role}
+// All dates pushed to next weekday if they land on Sat/Sun
+function pendingMilestones() {
+  const out = [];
+  ROLES.forEach(r => {
+    if (r.status !== 'pending' || !r.sendDate) return;
+    const sent = new Date(r.sendDate);
+    const day5 = new Date(sent); day5.setDate(sent.getDate() + 5);
+    const day7 = new Date(sent); day7.setDate(sent.getDate() + 7);
+    const day10 = new Date(sent); day10.setDate(sent.getDate() + 10);
+    out.push({ date: fmtDate(nextWeekday(day5)), action: 'Bump window opens', role: r, urgency: 'soft' });
+    out.push({ date: fmtDate(nextWeekday(day7)), action: 'Last bump day', role: r, urgency: 'mid' });
+    out.push({ date: fmtDate(nextWeekday(day10)), action: 'Day-10 final / pivot to backup', role: r, urgency: 'hard' });
+  });
+  return out;
+}
+
+// Calendar state
+let calOffsetDays = 0;       // days from today (positive = forward, negative = backward)
+let calWindowDays = 5;       // 5-day default, 7 expanded
+
+function renderFollowupSchedule() {
+  const container = document.getElementById('followupSchedule');
+  const rangeLabel = document.getElementById('calRangeLabel');
+  const milestones = pendingMilestones();
+  const today = new Date(TODAY_STR);
+
+  // Build window starting at today + offset
+  const days = [];
+  for (let i = 0; i < calWindowDays; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + calOffsetDays + i);
+    const dateStr = fmtDate(d);
+    const dayMilestones = milestones.filter(m => m.date === dateStr);
+    const dow = d.getDay();
+    days.push({
+      date: dateStr,
+      day: dayName(d),
+      milestones: dayMilestones,
+      isToday: (calOffsetDays + i) === 0,
+      isWeekend: dow === 0 || dow === 6
+    });
+  }
+
+  // Render cards
+  const html = days.map(d => {
+    const byAction = {};
+    d.milestones.forEach(m => {
+      const key = m.action;
+      if (!byAction[key]) byAction[key] = { urgency: m.urgency, roles: [] };
+      byAction[key].roles.push(m.role);
+    });
+    const actionKeys = Object.keys(byAction);
+
+    // Card-level classes
+    let cardCls = 'cal-card';
+    if (d.isToday) cardCls += ' today';
+    if (d.isWeekend) cardCls += ' weekend';
+    if (actionKeys.some(k => byAction[k].urgency === 'hard')) cardCls += ' has-urgent';
+    else if (actionKeys.some(k => byAction[k].urgency === 'mid')) cardCls += ' has-mid';
+    else if (actionKeys.length > 0) cardCls += ' has-soft';
+
+    const totalRoles = d.milestones.length;
+    // Format date as "May 11" + day-of-week
+    const dObj = new Date(d.date + 'T00:00:00');
+    const dateLabel = dObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + (d.isToday ? ' <span style="color:var(--accent);font-size:10px;">today</span>' : '');
+
+    let actionHtml = '';
+    if (actionKeys.length === 0) {
+      actionHtml = '<div class="cal-empty">No actions</div>';
+    } else {
+      // Order: hard, mid, soft
+      const order = { hard: 0, mid: 1, soft: 2 };
+      actionKeys.sort((a, b) => order[byAction[a].urgency] - order[byAction[b].urgency]);
+      actionHtml = actionKeys.map(k => {
+        const cohort = byAction[k];
+        const labelCls = cohort.urgency;
+        const rolesList = cohort.roles.map(r => {
+          const sc = r.score ? r.score.toFixed(1) : '';
+          return '<span class="cal-role-mini" title="' + (r.role || '').replace(/"/g, '&quot;') + ' · score ' + sc + '"><a href="outreach/' + r.slug + '/status.md" target="_blank">' + r.company + '</a></span>';
+        }).join('');
+        // shorten action label for cards
+        let short = k;
+        if (k.indexOf('Bump window opens') === 0) short = 'Day-5 bump opens';
+        else if (k.indexOf('Last bump day') === 0) short = 'Day-7 last bump';
+        else if (k.indexOf('Day-10') === 0) short = 'Day-10 final';
+        return '<div class="cal-action"><div class="cal-action-label ' + labelCls + '">' + short + ' (' + cohort.roles.length + ')</div>' + rolesList + '</div>';
+      }).join('');
+    }
+
+    return '<div class="' + cardCls + '"' + (d.isToday ? ' data-today-card="1"' : '') + '>'
+      + '<div class="cal-card-head">'
+      + '<div class="cal-date">' + dateLabel + '<span class="day-suffix">' + d.day + '</span></div>'
+      + '<div class="cal-count' + (totalRoles > 0 ? ' has-roles' : '') + '">' + totalRoles + '</div>'
+      + '</div>'
+      + actionHtml
+      + '</div>';
+  }).join('');
+
+  container.innerHTML = html;
+  container.className = 'cal-grid' + (calWindowDays === 7 ? ' expanded' : '');
+
+  // Range label
+  if (rangeLabel) {
+    const start = days[0].date;
+    const end = days[days.length - 1].date;
+    const startLabel = new Date(start + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const endLabel = new Date(end + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    rangeLabel.textContent = startLabel + ' → ' + endLabel;
+  }
+
+  // Update Prev button state (disable if we'd go before today, i.e. only allow forward navigation from today)
+  const prevBtn = document.getElementById('calPrev');
+  if (prevBtn) prevBtn.disabled = calOffsetDays <= 0;
+}
+
+// Calendar event handlers (wired on DOM ready below)
+function initCalendarNav() {
+  const prev = document.getElementById('calPrev');
+  const next = document.getElementById('calNext');
+  const todayBtn = document.getElementById('calToday');
+  const expand = document.getElementById('calExpand');
+  if (prev) prev.addEventListener('click', () => {
+    calOffsetDays = Math.max(0, calOffsetDays - calWindowDays);
+    renderFollowupSchedule();
+  });
+  if (next) next.addEventListener('click', () => {
+    calOffsetDays += calWindowDays;
+    renderFollowupSchedule();
+  });
+  if (todayBtn) todayBtn.addEventListener('click', () => {
+    calOffsetDays = 0;
+    renderFollowupSchedule();
+  });
+  if (expand) expand.addEventListener('click', () => {
+    calWindowDays = (calWindowDays === 5) ? 7 : 5;
+    expand.textContent = (calWindowDays === 5) ? 'Expand to 7' : 'Show 5 days';
+    renderFollowupSchedule();
+  });
+}
+
+function recomputeStats() {
+  const total = ROLES.length;
+  const pending = ROLES.filter(r => r.status === 'pending').length;
+  const replied = ROLES.filter(r => r.status === 'replied').length;
+  const rejected = ROLES.filter(r => r.status === 'rejected').length;
+  const skipped = ROLES.filter(r => r.status === 'skipped').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statReplied').textContent = replied;
+  document.getElementById('statSkipped').textContent = skipped + ' / ' + rejected + ' rejected';
+}
+
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.sort;
+    if (currentSort.col === col) {
+      currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort.col = col;
+      // sensible default direction per column type
+      currentSort.dir = (col === 'score' || col === 'sent' || col === 'next') ? 'desc' : 'asc';
+    }
+    // Clear sorted class and reset all arrow textContent on every th[data-sort]
+    document.querySelectorAll('th[data-sort]').forEach(h => {
+      h.classList.remove('sorted');
+      const arrow = h.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = '';
+    });
+    th.classList.add('sorted');
+    const activeArrow = th.querySelector('.sort-arrow');
+    if (activeArrow) activeArrow.textContent = currentSort.dir === 'asc' ? '▲' : '▼';
+    renderRows();
+  });
+});
+
+document.querySelectorAll('.pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    const dim = pill.dataset.filter;
+    const val = pill.dataset.value;
+    document.querySelectorAll('.pill[data-filter="' + dim + '"]').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeFilters[dim] = val;
+    renderRows();
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input', e => {
+  activeFilters.search = e.target.value;
+  renderRows();
+});
+
+// ===== Engagement signal detection (note regex) =====
+// IMPORTANT: rejected roles never get engagement signals — rejection ends the journey.
+// Tight patterns to avoid false positives on JD-location text ("on-site") or "we may interview" rejection-email language.
+function getEngagementSignal(r) {
+  if (r.status === 'rejected') return null; // rejection overrides any engagement signal
+  const n = (r.note || '');
+  // Hierarchy: replied > interview > screener-invite > accepted > profile-view > none
+  if (r.status === 'replied') return { stage: 'replied', label: 'Replied', when: r.sendDate };
+  // Interview: only specific interview-process phrases, NOT bare "interview" or "on-site" (false-positive on geo)
+  if (/\b(interview\s+(invite|scheduled|round|loop|panel|call|day)|finalist\s+round|home\s+assignment|advanced\s+to\s+(interview|next|round)|first\s+round\s+(interview|call)|on-?site\s+(interview|loop))\b/i.test(n)) {
+    return { stage: 'interview', label: 'Interview', when: r.sendDate };
+  }
+  // Screener: explicit screener/recruiter-call phrases
+  if (/\b(screener\s+(call|invite|email|interview)|recruiter\s+(call|reply|screening)|screening\s+call|moved\s+to\s+screen)\b/i.test(n)) {
+    return { stage: 'screener', label: 'Screener', when: r.sendDate };
+  }
+  // Accepted: connection accepted (explicit phrasing only)
+  const acceptedMatch = n.match(/\bACCEPTED\s+(\d{4}-\d{2}-\d{2})/);
+  if (acceptedMatch) return { stage: 'accepted', label: 'Connect accepted', when: acceptedMatch[1] };
+  if (/\b(Connect[-+\s]Note\s+(was\s+)?accepted|connection\s+request\s+accepted|invitation\s+accepted)\b/i.test(n)) {
+    return { stage: 'accepted', label: 'Connect accepted', when: r.sendDate };
+  }
+  // Profile view signal
+  const pvMatch = n.match(/(viewed\s+(?:Blagoja's\s+|user's\s+|my\s+)?(?:LinkedIn\s+)?profile|profile[\s-]+viewed|profile\s+view\s+signal)/i);
+  if (pvMatch) {
+    // Try to extract a date near the signal
+    const idx = n.indexOf(pvMatch[0]);
+    const window = n.slice(Math.max(0, idx - 50), idx + 50);
+    const dateMatch = (window.match(/\b(\d{4}-\d{2}-\d{2})\b/) || [])[1];
+    return { stage: 'profile-view', label: 'Profile viewed', when: dateMatch || r.sendDate };
+  }
+  return null;
+}
+
+// Days between today and a date string (positive if date in past, negative if future)
+function daysAgo(dateStr) {
+  if (!dateStr) return Infinity;
+  return daysBetween(dateStr, TODAY_STR);
+}
+
+// ===== Funnel widget =====
+// Rules:
+// - Sent  = all roles with sendDate and status != skipped (includes rejected — outreach DID go out)
+// - Engaged / Replied / Interview = signal-bearing roles where status is NOT rejected
+// - Closed (rejected) = subset of Sent where employer formally rejected
+function renderFunnel() {
+  const c = document.getElementById('funnelWidget');
+  const eligible = ROLES.filter(r => r.status !== 'skipped');
+  const sent = eligible.filter(r => r.sendDate);
+  let accepted = 0, replied = 0, interview = 0;
+  sent.forEach(r => {
+    const s = getEngagementSignal(r); // returns null for rejected automatically
+    if (!s) return;
+    if (s.stage === 'accepted' || s.stage === 'profile-view' || s.stage === 'screener') accepted++;
+    if (s.stage === 'replied') replied++;
+    if (s.stage === 'interview') interview++;
+  });
+  // accepted should include replied/interview cumulative
+  accepted = accepted + replied + interview;
+  replied = replied + interview;
+  const closed = sent.filter(r => r.status === 'rejected').length;
+
+  const stages = [
+    { key: 's-sent', label: 'Sent', value: sent.length, denom: sent.length },
+    { key: 's-accepted', label: 'Engaged (accept / view / screener)', value: accepted, denom: sent.length },
+    { key: 's-replied', label: 'Substantive Reply', value: replied, denom: sent.length },
+    { key: 's-interview', label: 'Interview', value: interview, denom: sent.length },
+    { key: 's-closed', label: 'Closed (rejected)', value: closed, denom: sent.length },
+  ];
+  c.innerHTML = stages.map((s, i) => {
+    const pct = s.denom > 0 ? Math.round((s.value / s.denom) * 100) : 0;
+    const pctLabel = i === 0 ? 'baseline' : pct + '% of sent';
+    return '<div class="funnel-stage ' + s.key + (s.value > 0 ? ' active' : '') + '" data-funnel="' + s.key + '" data-label="' + s.label + '">'
+      + '<div class="funnel-label">' + s.label + '</div>'
+      + '<div class="funnel-value">' + s.value + '</div>'
+      + '<div class="funnel-pct">' + pctLabel + '</div>'
+      + '<div class="funnel-bar" style="width:' + Math.max(pct, 5) + '%;"></div>'
+      + '</div>';
   }).join('');
 }
 
-document.querySelectorAll('[data-filter-status]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-filter-status]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeFilters.status = btn.dataset.filterStatus;
-    renderRoles();
+// ===== Hot Signals strip =====
+function renderHotSignals() {
+  const c = document.getElementById('hotSignals');
+  const candidates = [];
+  ROLES.forEach(r => {
+    if (r.status === 'skipped' || r.status === 'rejected') return;
+    const s = getEngagementSignal(r);
+    if (!s) return;
+    const age = daysAgo(s.when);
+    if (age > 14) return;
+    candidates.push({ role: r, signal: s, age });
+  });
+  candidates.sort((a, b) => a.age - b.age);
+  if (candidates.length === 0) {
+    c.innerHTML = '<div class="hot-empty">No active engagement signals in the last 14 days. Keep firing bumps.</div>';
+    return;
+  }
+  c.innerHTML = candidates.map(x => {
+    const icon = { 'accepted': '✓', 'profile-view': '👁', 'replied': '↩', 'screener': '📞', 'interview': '🎤' }[x.signal.stage] || '·';
+    return '<div class="hot-item ' + x.signal.stage + '">'
+      + '<span class="hot-icon">' + icon + '</span>'
+      + '<span><strong>' + x.role.company + '</strong> · ' + x.role.role + ' (id ' + x.role.id + ', score ' + x.role.score.toFixed(1) + ')</span>'
+      + '<span class="hot-meta">' + x.signal.label + ' · ' + x.age + 'd ago · <a href="outreach/' + x.role.slug + '/status.md" target="_blank" style="color:var(--accent);">status</a></span>'
+      + '</div>';
+  }).join('');
+}
+
+// ===== Cohort timeline =====
+function renderCohorts() {
+  const c = document.getElementById('cohortGrid');
+  // Group sent roles by send week (Mon-Sun)
+  const cohorts = {};
+  ROLES.forEach(r => {
+    if (!r.sendDate) return;
+    const d = new Date(r.sendDate + 'T00:00:00');
+    // Find Monday of the week
+    const dow = d.getDay();
+    const mondayOffset = dow === 0 ? -6 : (1 - dow);
+    const monday = new Date(d); monday.setDate(d.getDate() + mondayOffset);
+    const key = fmtDate(monday);
+    if (!cohorts[key]) cohorts[key] = [];
+    cohorts[key].push(r);
+  });
+  const keys = Object.keys(cohorts).sort();
+  let html = '<div class="cohort-row head">'
+    + '<div>Week starting</div>'
+    + '<div style="text-align:center;">Sent</div>'
+    + '<div style="text-align:center;">Engaged</div>'
+    + '<div style="text-align:center;">Replied</div>'
+    + '<div style="text-align:center;">Rejected</div>'
+    + '<div style="text-align:center;">Silent</div>'
+    + '<div style="text-align:center;">Pending</div>'
+    + '<div style="text-align:right;">Engage %</div>'
+    + '</div>';
+  keys.forEach(key => {
+    const list = cohorts[key];
+    const sent = list.length;
+    let engaged = 0, replied = 0, rejected = 0, pending = 0;
+    list.forEach(r => {
+      if (r.status === 'rejected') rejected++;
+      else if (r.status === 'replied') { replied++; engaged++; }
+      else if (r.status === 'pending') {
+        pending++;
+        const s = getEngagementSignal(r);
+        if (s) engaged++;
+      }
+    });
+    const silent = pending - (engaged - replied);
+    const engagePct = sent > 0 ? Math.round((engaged / sent) * 100) : 0;
+    const pctCls = engagePct >= 20 ? 'cohort-pct-fill' : (engagePct > 0 ? 'cohort-pct-fill partial' : 'cohort-pct-fill bad');
+    const startDate = new Date(key + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    html += '<div class="cohort-row" data-cohort-week="' + key + '" data-label="Week of ' + startDate + '">'
+      + '<div><strong>' + startDate + '</strong></div>'
+      + '<div class="cohort-cell sent">' + sent + '</div>'
+      + '<div class="cohort-cell accepted">' + engaged + '</div>'
+      + '<div class="cohort-cell replied">' + replied + '</div>'
+      + '<div class="cohort-cell rejected">' + rejected + '</div>'
+      + '<div class="cohort-cell silent">' + silent + '</div>'
+      + '<div class="cohort-cell">' + pending + '</div>'
+      + '<div><div class="cohort-pct-bar"><div class="' + pctCls + '" style="width:' + Math.max(engagePct, 2) + '%;"></div></div><div class="cohort-pct-text">' + engagePct + '%</div></div>'
+      + '</div>';
+  });
+  c.innerHTML = html;
+}
+
+// ===== Score histogram (pending only) =====
+function renderScoreHist() {
+  const c = document.getElementById('scoreHist');
+  const buckets = [
+    { min: 8.0, max: 10, label: '8.0+', cls: 'tier1' },
+    { min: 7.5, max: 8.0, label: '7.5-7.9', cls: 'tier1' },
+    { min: 7.0, max: 7.5, label: '7.0-7.4', cls: 'tier2' },
+    { min: 6.5, max: 7.0, label: '6.5-6.9', cls: 'tier2' },
+    { min: 6.0, max: 6.5, label: '6.0-6.4', cls: 'lower' },
+    { min: 0, max: 6.0, label: '<6.0', cls: 'lower' },
+  ];
+  const pending = ROLES.filter(r => r.status === 'pending');
+  const counts = buckets.map(b => pending.filter(r => r.score >= b.min && r.score < b.max).length);
+  const max = Math.max(...counts, 1);
+  c.innerHTML = buckets.map((b, i) => {
+    const pct = (counts[i] / max) * 100;
+    return '<div class="hist-bar" data-score-min="' + b.min + '" data-score-max="' + b.max + '" data-label="' + b.label + '">'
+      + '<div class="hist-label">' + b.label + '</div>'
+      + '<div class="hist-track"><div class="hist-fill ' + b.cls + '" style="width:' + pct + '%;"></div></div>'
+      + '<div class="hist-count">' + counts[i] + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+// ===== Domain breakdown (pending only, heuristic classifier) =====
+function classifyDomain(r) {
+  const blob = ((r.role || '') + ' ' + (r.company || '') + ' ' + (r.note || '')).toLowerCase();
+  if (/crypto|web3|defi|blockchain|exchange|bitmart|coinspaid|saga\.xyz|chaingpt|tokenization|rwa\b|stablecoin|keyrock|1inch|mesh\b/.test(blob)) return 'Crypto / Web3';
+  if (/health|dental|medical|pharma|hipaa|carestream|lyra|curoflow|innovaccer|sedric|everyday health|mental/.test(blob)) return 'Healthtech';
+  if (/payment|treasury|fintech|insurance|broker|insurtech|nplan|spark advisors|9fin|euroclear|broadridge|nasdaq|kuberno|brk tech|taulia|amdocs|vindicia|virtual card|leveraged finance|fx/.test(blob)) return 'Fintech / FS';
+  if (/grc|compliance|governance|security|risk|compyl|usercentrics|oritain/.test(blob)) return 'GRC / Compliance';
+  if (/marketplace|b2b2c|two-?sided|toptal|visit\.org|fever|booking|adevinta|fotocasa/.test(blob)) return 'Marketplace / B2B2C';
+  if (/adtech|advertising|localiq|usa today|razorfish|dunnhumby/.test(blob)) return 'AdTech / Retail Media';
+  if (/energy|enmacc|ensek|gas|electricity|utility/.test(blob)) return 'Energy';
+  if (/data platform|graph|neo4j|cloud storage|netapp|infrastructure|arcadia|s&p global|wso/.test(blob)) return 'Data / Infra';
+  if (/ai|agent|ml |llm |agentic|model|kairos/.test(blob)) return 'AI / ML';
+  if (/social discovery|dating|sdg/.test(blob)) return 'Social / Consumer';
+  if (/xero|payroll|gusto|hr |hrtech/.test(blob)) return 'HR / Payroll';
+  if (/recruiter-masked|masked|confidential/.test(blob)) return 'Masked / Aggregator';
+  return 'Other';
+}
+
+function renderDomains() {
+  const c = document.getElementById('domainChips');
+  const pending = ROLES.filter(r => r.status === 'pending');
+  const counts = {};
+  pending.forEach(r => {
+    const d = classifyDomain(r);
+    counts[d] = (counts[d] || 0) + 1;
+  });
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  c.innerHTML = entries.map(([d, n]) => '<div class="domain-chip" data-domain="' + d.replace(/"/g,'&quot;') + '">' + d + '<span class="dcount">' + n + '</span></div>').join('');
+}
+
+// ===== Compact table toggle =====
+function initCompactToggle() {
+  const cb = document.getElementById('compactToggle');
+  if (!cb) return;
+  // Load from localStorage
+  if (localStorage.getItem('dashCompact') === '1') {
+    cb.checked = true;
+    document.getElementById('rolesTable').classList.add('compact');
+  }
+  cb.addEventListener('change', () => {
+    const t = document.getElementById('rolesTable');
+    if (cb.checked) {
+      t.classList.add('compact');
+      localStorage.setItem('dashCompact', '1');
+    } else {
+      t.classList.remove('compact');
+      localStorage.removeItem('dashCompact');
+    }
+  });
+}
+
+// ===== Notes drawer (click expand link to show full note inline) =====
+function initNotesDrawer() {
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.note-expand-btn');
+    if (!btn) return;
+    e.preventDefault();
+    const rid = btn.dataset.roleId;
+    const role = ROLES.find(r => r.id == rid);
+    if (!role) return;
+    // Find the row
+    const row = document.querySelector('tr[data-row-id="' + rid + '"]');
+    if (!row) return;
+    // Check if drawer already exists
+    const next = row.nextElementSibling;
+    if (next && next.classList.contains('note-drawer-row') && next.dataset.forRow == rid) {
+      next.remove();
+      return;
+    }
+    // Remove any other open drawers
+    document.querySelectorAll('tr.note-drawer-row').forEach(el => el.remove());
+    // Insert new drawer row
+    const colspan = row.children.length;
+    const drawer = document.createElement('tr');
+    drawer.className = 'note-drawer-row';
+    drawer.dataset.forRow = rid;
+    drawer.innerHTML = '<td colspan="' + colspan + '"><div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Full note · id ' + role.id + ' · ' + role.company + '</div><div class="note-drawer">' + (role.note || '') + '</div></td>';
+    row.after(drawer);
+  });
+}
+
+// ===== Card-as-filter handlers =====
+function applyCardFilter(idArray, label) {
+  activeFilters.idSet = new Set(idArray);
+  activeFilters.label = label;
+  const pill = document.getElementById('filterPill');
+  const pillLabel = document.getElementById('filterPillLabel');
+  const pillCount = document.getElementById('filterPillCount');
+  pillLabel.textContent = label;
+  pillCount.textContent = '(' + idArray.length + ' role' + (idArray.length === 1 ? '' : 's') + ')';
+  pill.style.display = 'flex';
+  renderRows();
+  // Scroll to table
+  document.getElementById('rolesHeader').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function clearCardFilter() {
+  activeFilters.idSet = null;
+  activeFilters.label = null;
+  document.getElementById('filterPill').style.display = 'none';
+  renderRows();
+}
+
+// Funnel stage → role IDs
+function getFunnelRoleIds(key) {
+  const eligible = ROLES.filter(r => r.status !== 'skipped');
+  const sent = eligible.filter(r => r.sendDate);
+  if (key === 's-sent') return sent.map(r => r.id);
+  if (key === 's-accepted') return sent.filter(r => getEngagementSignal(r) !== null).map(r => r.id);
+  if (key === 's-replied') return sent.filter(r => { const s = getEngagementSignal(r); return s && (s.stage === 'replied' || s.stage === 'interview'); }).map(r => r.id);
+  if (key === 's-interview') return sent.filter(r => { const s = getEngagementSignal(r); return s && s.stage === 'interview'; }).map(r => r.id);
+  if (key === 's-closed') return ROLES.filter(r => r.status === 'rejected').map(r => r.id);
+  return [];
+}
+
+// Stat card → role IDs
+function getStatRoleIds(key) {
+  if (key === 'total') return ROLES.map(r => r.id);
+  if (key === 'pending') return ROLES.filter(r => r.status === 'pending').map(r => r.id);
+  if (key === 'replied') return ROLES.filter(r => r.status === 'replied').map(r => r.id);
+  if (key === 'skipped-rejected') return ROLES.filter(r => r.status === 'skipped' || r.status === 'rejected').map(r => r.id);
+  if (key === 'due-today') {
+    return ROLES.filter(r => {
+      if (r.status !== 'pending' || !r.sendDate) return false;
+      return daysBetween(r.sendDate, TODAY_STR) >= 5;
+    }).map(r => r.id);
+  }
+  return [];
+}
+
+function initCardFilters() {
+  // Funnel
+  document.getElementById('funnelWidget').addEventListener('click', e => {
+    const stage = e.target.closest('[data-funnel]');
+    if (!stage) return;
+    const key = stage.dataset.funnel;
+    const label = 'Pipeline → ' + stage.dataset.label;
+    applyCardFilter(getFunnelRoleIds(key), label);
+  });
+  // Stat cards
+  document.querySelectorAll('.stat[data-filter]').forEach(card => {
+    card.addEventListener('click', () => {
+      const key = card.dataset.filter;
+      const labelEl = card.querySelector('.stat-label');
+      const label = 'Stat → ' + (labelEl ? labelEl.textContent : key);
+      applyCardFilter(getStatRoleIds(key), label);
+    });
+  });
+  // Histogram bars
+  document.getElementById('scoreHist').addEventListener('click', e => {
+    const bar = e.target.closest('.hist-bar');
+    if (!bar) return;
+    const min = parseFloat(bar.dataset.scoreMin);
+    const max = parseFloat(bar.dataset.scoreMax);
+    const ids = ROLES.filter(r => r.status === 'pending' && r.score >= min && r.score < max).map(r => r.id);
+    applyCardFilter(ids, 'Score range → ' + bar.dataset.label + ' (pending)');
+  });
+  // Domain chips
+  document.getElementById('domainChips').addEventListener('click', e => {
+    const chip = e.target.closest('.domain-chip');
+    if (!chip) return;
+    const domain = chip.dataset.domain;
+    const ids = ROLES.filter(r => r.status === 'pending' && classifyDomain(r) === domain).map(r => r.id);
+    applyCardFilter(ids, 'Domain → ' + domain + ' (pending)');
+  });
+  // Cohort rows
+  document.getElementById('cohortGrid').addEventListener('click', e => {
+    const row = e.target.closest('.cohort-row');
+    if (!row || row.classList.contains('head')) return;
+    const week = row.dataset.cohortWeek;
+    if (!week) return;
+    const monStart = new Date(week + 'T00:00:00');
+    const sunEnd = new Date(monStart); sunEnd.setDate(monStart.getDate() + 6);
+    const monStr = fmtDate(monStart);
+    const sunStr = fmtDate(sunEnd);
+    const ids = ROLES.filter(r => r.sendDate && r.sendDate >= monStr && r.sendDate <= sunStr).map(r => r.id);
+    applyCardFilter(ids, row.dataset.label);
+  });
+  // Hot signals
+  document.getElementById('hotSignals').addEventListener('click', e => {
+    const item = e.target.closest('.hot-item');
+    if (!item) return;
+    // Don't intercept the status link inside
+    if (e.target.tagName === 'A') return;
+    // Extract id from text: 'id <num>' pattern
+    const match = item.textContent.match(/id\s+(\d+)/);
+    if (match) {
+      applyCardFilter([parseInt(match[1])], 'Hot signal → single role');
+    }
+  });
+  // Today's calendar card → toggle Today's Actions drawer
+  document.getElementById('followupSchedule').addEventListener('click', e => {
+    const card = e.target.closest('[data-today-card]');
+    if (!card) return;
+    // Don't intercept role-chip clicks
+    if (e.target.closest('.cal-role-mini')) return;
+    const drawer = document.getElementById('todayActionsDrawer');
+    if (drawer.style.display === 'none') {
+      drawer.style.display = 'block';
+      // Scroll drawer into view
+      drawer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      drawer.style.display = 'none';
+    }
+  });
+  // Clear filter button
+  document.getElementById('clearFilter').addEventListener('click', clearCardFilter);
+}
+
+// Hook clear-filter into ROLES table interaction: if user changes status/channel/search pill, also clear the card-filter
+document.querySelectorAll('.pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    if (activeFilters.idSet) clearCardFilter();
   });
 });
-document.getElementById('searchBox').addEventListener('input', (e) => {
-  activeFilters.search = e.target.value;
-  renderRoles();
-});
 
-renderStats();
-renderTodayActions();
-renderRoles();
+recomputeStats();
+renderRows();
+renderActions();
+renderFollowupSchedule();
+initCalendarNav();
+renderFunnel();
+renderHotSignals();
+renderCohorts();
+renderScoreHist();
+renderDomains();
+initCompactToggle();
+initNotesDrawer();
+initCardFilters();
 </script>
+
 </body>
 </html>

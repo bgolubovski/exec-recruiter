@@ -1,19 +1,13 @@
 # Geo rules and CV header conditional
-# Defines which geographies are in-scope for sourcing and how the CV header
-# reads per geo.
-#
-# REPLACE ALL "<...>" PLACEHOLDERS WITH YOUR OWN VALUES BEFORE FIRST USE.
+# Defines which geographies are in-scope for sourcing and how the CV header reads per geo.
 
 # Default user location - stays the same regardless of role geo
-home_base: "<Your City>, <Your Country>"
+home_base: "Lisbon, Portugal"
 
-# Citizenship / work-authorization signals to surface in the CV header.
-# Examples: "US Citizen", "EU National (Italian)", "UK Indefinite Leave to Remain",
-# "Canadian PR", "OPT - 2 years remaining", "Open to visa sponsorship"
-citizenship: "<Your work-auth status>"
+# Citizenship / work-authorization signals to surface in the CV header
+citizenship: "US Citizen"
 
-# In-scope regions for sourcing (LinkedIn search location filter).
-# Add or remove regions to match your willingness to relocate.
+# In-scope regions for sourcing (LinkedIn search location filter)
 sourcing_regions:
   - id: us-remote
     label: "United States"
@@ -21,7 +15,7 @@ sourcing_regions:
     accept_any_modality: true
   - id: uk
     label: "United Kingdom"
-    linkedin_filter: ""           # all modalities; filter at score time
+    linkedin_filter: ""           # all modalities; we'll filter at score time
     accept_any_modality: true
   - id: eu
     label: "European Union"
@@ -33,36 +27,31 @@ sourcing_regions:
       - Ireland
       - Portugal
     accept_any_modality: true
-  # Examples of opt-in geographies that require explicit user approval.
-  # Uncomment and customize if relevant to you:
-  # - id: dubai
-  #   label: "United Arab Emirates"
-  #   accept_any_modality: false
-  #   require_explicit_approval: true
-  # - id: israel
-  #   label: "Israel"
-  #   accept_any_modality: false
-  #   require_explicit_approval: true
+  - id: dubai
+    label: "United Arab Emirates"
+    accept_any_modality: false
+    require_explicit_approval: true
+  - id: israel
+    label: "Israel"
+    accept_any_modality: false
+    require_explicit_approval: true
 
 # CV header conditional logic
 # The plugin chooses the header line based on the role's geo.
-# Customize per your relocation willingness and work-auth status.
 cv_header_templates:
-  us: "<Your City>, <Your Country> (<Your work-auth, e.g. US Citizen>)"
-  uk: "<Your City>, <Your Country> (<work-auth>, Open to UK Relocation)"
-  eu_non_uk: "<Your City>, <Your Country>"
-  default: "<Your City>, <Your Country>"
-  # For geographies you do NOT want to claim relocation to without explicit
-  # approval, set the header to your home base only:
-  # dubai: "<Your City>, <Your Country>"
-  # israel: "<Your City>, <Your Country>"
+  us: "Lisbon, Portugal (US Citizen)"
+  uk: "Lisbon, Portugal (US Citizen, Open to UK Relocation)"
+  eu_non_uk: "Lisbon, Portugal"
+  dubai: "Lisbon, Portugal"            # do not claim Dubai relocation without explicit approval
+  israel: "Lisbon, Portugal"           # do not claim Tel Aviv relocation without explicit approval
 
 # Geo friction flags - surfaced during scoring
-on_site_only_outside_home: skip       # always skip on-site-only outside the home metro
+on_site_only_outside_home: skip      # always skip on-site-only outside the home metro
 hybrid_3_plus_days: friction          # flag, do not auto-skip
 relocation_required_outside_us_uk: require_explicit_approval
 
 # Strict rules - must never be silently violated
 strict_rules:
-  - "Never claim relocation to a geo without explicit user approval"
+  - "Never claim Tel Aviv relocation without explicit user approval"
+  - "Never claim Dubai relocation without explicit user approval"
   - "Default to home_base for any unspecified geo"
