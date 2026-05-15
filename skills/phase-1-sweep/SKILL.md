@@ -9,7 +9,7 @@ Run the daily Phase 1 sweep. Source new roles from LinkedIn AND directly from ma
 
 ## When to invoke
 
-The user says: "run today's sweep", "Phase 1", "find new roles", "what's new today", "morning sweep", "scan LinkedIn for product roles", "/sweep". Or this skill is fired by a scheduled task at 9am Lisbon time.
+The user says: "run today's sweep", "Phase 1", "find new roles", "what's new today", "morning sweep", "scan LinkedIn for product roles", "/sweep". Or this skill is fired by a scheduled task at 9am [Operator Home City] time.
 
 ## Required setup
 
@@ -129,7 +129,7 @@ Do NOT use em or en dashes anywhere (per `outreach-style.yaml`). Do NOT include 
 
 ## Schedule integration
 
-The plugin can be triggered on a 9am Lisbon-time daily schedule via Cowork's scheduled task system:
+The plugin can be triggered on a 9am [Operator Home City]-time daily schedule via Cowork's scheduled task system:
 
 ```
 mcp__scheduled-tasks__create_scheduled_task with prompt: "Run the phase-1-sweep skill"

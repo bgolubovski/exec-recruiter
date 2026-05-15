@@ -1,0 +1,139 @@
+# {interviewer_name} — {company} {role_title} {round_label}
+
+**Booked:** {meeting_when} via {booking_link_or_channel}
+**Channel that led here:** {channel_origin}
+**Format:** {meeting_format}
+**Round:** {round}
+**Status:** {dashboard_status}
+**InMail burned to date:** {inmail_count}
+
+---
+
+## The Disambiguating Question (ask early, peer-to-peer)
+
+> "{primary_disambiguation_question}"
+
+**Backup variants:**
+- "{backup_variant_1}"
+- "{backup_variant_2}"
+
+**Why this matters:** {disambiguation_rationale}
+
+---
+
+## {interviewer_name}
+
+**LinkedIn:** {interviewer_linkedin_url}
+**Current title:** {interviewer_current_title}
+**Location:** {interviewer_location}
+**Tenure in seat:** {interviewer_tenure}
+**Reports to (inferred):** {interviewer_reports_to}
+
+### Career arc (most-relevant-first)
+{interviewer_career_arc}
+
+### Education
+{interviewer_education}
+
+### Signals to probe and use
+{interviewer_signals_to_probe}
+
+### Signals to avoid
+{interviewer_signals_to_avoid}
+
+### Title conflicts
+{interviewer_title_conflicts}
+
+### Reading note
+{interviewer_reading_note}
+
+---
+
+## Founder / leadership context
+
+{founder_leadership_section}
+
+---
+
+## {company} the company
+
+### Origin and pivots
+{company_origin}
+
+### Funding (refreshed)
+{funding_state}
+
+### Recent press (last 90 days)
+{recent_press}
+
+### Anchor case study
+{anchor_case_study}
+
+### Stage shape signals
+{stage_shape}
+
+---
+
+## Your pattern-match anchors (lead with these, in this order — Vector and Compass sit at different layers, do not conflate)
+
+{tier_1_anchors}
+
+### Tier 2 anchors (use only if she/he probes)
+{tier_2_anchors}
+
+---
+
+## First 90 Days (when she/he asks)
+
+{first_90_days_narratives}
+
+---
+
+## Customer / domain questions to ask
+
+{questions_to_ask}
+
+---
+
+## Questions she/he is likely to ask you — one-line answers
+
+{likely_questions_back}
+
+---
+
+## Comp ask (only if surfaced)
+
+{comp_posture}
+
+---
+
+## Friction flags to listen for
+
+{friction_flags}
+
+---
+
+## Wrap-up signals to send by minute 25
+
+{wrap_up_signals}
+
+---
+
+## Do Nots
+
+{do_nots}
+
+---
+
+## Logistics
+
+{logistics_table}
+
+### Pre-call self-check
+{pre_call_checklist}
+
+---
+
+## Sources
+
+{sources_list}

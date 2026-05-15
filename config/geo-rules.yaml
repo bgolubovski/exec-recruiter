@@ -2,10 +2,10 @@
 # Defines which geographies are in-scope for sourcing and how the CV header reads per geo.
 
 # Default user location - stays the same regardless of role geo
-home_base: "Lisbon, Portugal"
+home_base: "[Operator Home City]"
 
 # Citizenship / work-authorization signals to surface in the CV header
-citizenship: "US Citizen"
+citizenship: "[Operator Citizenship]"
 
 # In-scope regions for sourcing (LinkedIn search location filter)
 sourcing_regions:
@@ -39,11 +39,11 @@ sourcing_regions:
 # CV header conditional logic
 # The plugin chooses the header line based on the role's geo.
 cv_header_templates:
-  us: "Lisbon, Portugal (US Citizen)"
-  uk: "Lisbon, Portugal (US Citizen, Open to UK Relocation)"
-  eu_non_uk: "Lisbon, Portugal"
-  dubai: "Lisbon, Portugal"            # do not claim Dubai relocation without explicit approval
-  israel: "Lisbon, Portugal"           # do not claim Tel Aviv relocation without explicit approval
+  us: "[Operator Home City] ([Operator Citizenship])"
+  uk: "[Operator Home City] ([Operator Citizenship], [Operator Relocation Status])"
+  eu_non_uk: "[Operator Home City]"
+  dubai: "[Operator Home City]"            # do not claim Dubai relocation without explicit approval
+  israel: "[Operator Home City]"           # do not claim Tel Aviv relocation without explicit approval
 
 # Geo friction flags - surfaced during scoring
 on_site_only_outside_home: skip      # always skip on-site-only outside the home metro

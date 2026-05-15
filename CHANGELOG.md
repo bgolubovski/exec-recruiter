@@ -2,6 +2,33 @@
 
 All notable changes to the exec-recruiter plugin.
 
+## v0.5.0 (2026-05-14)
+
+### Added
+
+- **Phase 4: meeting prep** (`skills/phase-4-prep/`). Build an interview / screening-call prep packet for a booked conversation on a specific role. Pulls role context from the dashboard, researches the interviewer (LinkedIn + TheOrg + Crunchbase + web), refreshes company intel, generates the scope-disambiguation question (varies by round + altitude), first-90-days narrative (single or three branched), questions to ask, one-line answers to likely questions back, comp posture, friction flags, and a wrap-up signal checklist. Saves three artifacts: full markdown, interactive HTML, scannable one-pager.
+  - Supports rounds: `screen`, `working-session`, `panel`, `final`, `exec`, `reference-check-prep`.
+  - `--deep` flag triggers maximum-depth company intel research.
+  - Templates: `templates/prep-meeting.md.template`, `templates/prep-meeting.html.template`, `templates/prep-onepager.md.template`.
+  - References: `meeting-prep-recipes.md` (per-round and per-altitude recipes), `interviewer-research-patterns.md` (research sources, conflict resolution, what NOT to research).
+  - Canonical example structure shipped: see `templates/prep-meeting.html.template` for the full interactive packet skeleton.
+- **Phase 5: call debrief** (`skills/phase-5-debrief/`). Process post-call notes after a Phase-4-prepped meeting. Parses what was said, captures scope / comp / process / friction signals, structures a debrief artifact, updates the dashboard, suggests next-action (prep-next-round, send-thank-you-and-wait, send-requested-materials, passive-watch, mark-rejected, escalate-to-different-contact), and prompts for memory writes when patterns emerge.
+- **meeting-prep-researcher agent** (`agents/meeting-prep-researcher.md`). Dedicated agent for interviewer research + company intel refresh, used by Phase 4. Pulls LinkedIn + TheOrg + Crunchbase + web search + Wikipedia where applicable. Cross-references for title conflicts. Returns a structured intel object to phase-4-prep.
+- **New keywords**: `interview-prep`, `meeting-prep`, `call-debrief`.
+
+### Changed
+
+- Plugin description updated to reflect the new five-phase pipeline (sourcing → packet → send → prep → debrief).
+- Phases 4 and 5 are user-invoked only. They never auto-fire from dashboard signals.
+- The Vector / Compass distinction is enforced explicitly in Phase 4 templates and references. Vector is the AI-native SaaS product; Compass is the AI-native operating model advisory. They sit at different layers and must not be conflated.
+- Profile-view inbound signals are treated as neutral per `feedback_profile_view_signal.md`. Phase 5 does not classify them as positive engagement.
+
+### Notes
+
+- Phase 4 and Phase 5 are designed as a pair. Phase 5 grades the call against Phase 4's predictions; calibration improves the templates over time.
+- The HTML prep packet template (`prep-meeting.html.template`) includes: dark-mode-friendly light-mode UI, sticky left TOC, sticky right sidebar with always-visible quick-reference, view toggle (Full / Call mode), persistent checkboxes via sessionStorage, print-friendly CSS, no external dependencies.
+- Phase 4 does NOT draft outreach. Thank-you DMs, post-meeting Connect+Notes, and follow-up emails remain in the existing `outreach-drafter` agent invoked from Phase 2 or manually.
+
 ## v0.4.0 (2026-05-12)
 
 ### Added
@@ -27,7 +54,7 @@ All notable changes to the exec-recruiter plugin.
 ### Notes
 
 - The dashboard template ships with an empty `ROLES = [];` array; phase-1-sweep / phase-2-packet / phase-3-send workflows populate it over time.
-- The CV file-link pattern (`Golubovski-Blagoja-CV-{slug}.pdf`) is consistent with the cv-tailor agent and the phase-2-packet skill output convention. To re-brand for a different operator, update the prefix in `templates/dashboard.html` (line ~905) and in `scripts/tailor_cv.py`.
+- The CV file-link pattern (`Operator-FirstName-CV-{slug}.pdf`) is consistent with the cv-tailor agent and the phase-2-packet skill output convention. To re-brand for a different operator, update the prefix in `templates/dashboard.html` (line ~905) and in `scripts/tailor_cv.py`.
 
 ## v0.2.0 (2026-05-09)
 

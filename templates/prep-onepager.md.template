@@ -1,0 +1,84 @@
+# {interviewer_name} — {company} {role_title}, One-Pager
+
+**Booked:** {meeting_when} via {booking_link_or_channel}
+**Channel:** {channel_origin_short}
+
+---
+
+## The Disambiguating Question (ask early, peer-to-peer)
+
+> "{primary_disambiguation_question}"
+
+{disambiguation_options_summary}
+
+---
+
+## {interviewer_name} in 30 Seconds
+
+{interviewer_30_second_summary}
+
+**LinkedIn:** {interviewer_linkedin_url}
+
+**Reading her/him:** {interviewer_reading_note}
+
+---
+
+## Founder + Leadership in 10 Seconds
+
+{founder_brief}
+
+---
+
+## {company} in 60 Seconds
+
+{company_60_second_summary}
+
+---
+
+## Your Lead Anchors (in this order — Vector and Compass sit at different layers, do not conflate)
+
+{anchors_compressed}
+
+---
+
+## Questions to Pick From (pick 3-4)
+
+{questions_compressed}
+
+---
+
+## One-Line Answers to Her/His Likely Questions
+
+{likely_questions_compressed}
+
+---
+
+## First 90 Days (compress to ~90 sec)
+
+{first_90_days_compressed}
+
+---
+
+## Comp Ask (only if she/he surfaces it)
+
+> "{comp_one_liner}"
+
+{comp_rationale_short}
+
+---
+
+## Signals to Listen For
+
+{signals_compressed}
+
+---
+
+## Wrap-Up Signals to Send by Minute 25
+
+{wrap_up_compressed}
+
+---
+
+## Do Nots
+
+{do_nots_compressed}

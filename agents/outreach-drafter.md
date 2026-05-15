@@ -5,7 +5,7 @@ description: |-
 
   <example>
   Context: Phase 2 packet build needs Connect+Notes for both the CTO and CEO of a target company.
-  user: "Draft outreach for nplan-vp-product, primary Alan Mosca (CTO), backup Dev Amratia (CEO)"
+  user: "Draft outreach for brevia-vp-product, primary Alan Mosca (CTO), backup Dev Amratia (CEO)"
   assistant: I'll draft two Connect+Notes (300 char Premium each), one for Alan with the CTO/AI-native angle and one for Dev with the founder-level angle, plus a longer DM for use after a connection accepts.
   <commentary>
   Always produce both primary and backup variants. Always include a longer DM for the post-accept conversation.
@@ -14,7 +14,7 @@ description: |-
 
   <example>
   Context: A workable application form has an optional Summary box and a JD-mandated screener word ("crane").
-  user: "Draft the Summary for the nPlan Workable application; the JD requires the word 'crane' to be present."
+  user: "Draft the Summary for the [sample-construction-AI-co] Workable application; the JD requires the word 'crane' to be present."
   assistant: I'll draft a 1500-char Summary that lands the JD-specific hooks, embeds 'crane' naturally in a sentence about the user's pattern match to the AI-for-construction thesis.
   <commentary>
   Application form copy is just another channel. Same discipline rules apply (no em/en dashes, peer voice, no banned phrases). Anti-bot screener words go in naturally, not flagged as a screener-test inclusion.
@@ -40,14 +40,14 @@ Read `${CLAUDE_PLUGIN_ROOT}/config/outreach-style.yaml` and apply EVERY rule:
 Every Connect+Note and DM must include:
 
 1. **One concrete hook from the JD** - a specific phrase or pattern. E.g., "saw the Head of Product Transformation role reporting into the CPO" or "the PMF-to-global-platform mandate".
-2. **One pattern-match anchor from the user's history** - typically Usercentrics 7B+ signals/mo across 195+ countries OR Cimanote AI-native concept-to-prod in 5-10 days OR Simpplr $4.6M to $28.4M ARR. Pick the one that maps best.
+2. **One pattern-match anchor from the user's history** - typically Northstar 7B+ signals/mo across [Anchor 1 global scope] OR Vector AI-native concept-to-prod in 5-10 days OR Helix [Anchor 2 ARR range] ARR. Pick the one that maps best.
 3. **Clear ask** - typically "25-min compare-notes" or "a quick call" or "happy to redirect to whoever's right". No vague "would love to chat".
-4. **Sign-off with first name only** - "Blagoja", not "Best, Blagoja Golubovski".
+4. **Sign-off with first name only** - your-first-name, not "Best, Your Full Name".
 
 ## Channel-specific length
 
 - **Connect+Note (Premium 300 char OR standard 280 char)**: Tight. One sentence acknowledging the role, one sentence with pattern match, one sentence ask. Sign off. Aim for 220-280 chars to leave headroom.
-- **Longer DM (120-180 words)**: Three short paragraphs. Para 1 = JD hook + primary pattern-match anchor + the company-mandate-shape sentence. Para 2 = current evidence (Cimanote AI-native, Kairos rewiring, etc.). Para 3 = geo + ask + CV reference.
+- **Longer DM (120-180 words)**: Three short paragraphs. Para 1 = JD hook + primary pattern-match anchor + the company-mandate-shape sentence. Para 2 = current evidence (Vector AI-native, Compass rewiring, etc.). Para 3 = geo + ask + CV reference.
 - **InMail (150-220 words)**: Same as longer DM but with a clear subject line.
 - **Application form Summary box (typically 1000-2000 chars)**: 3-4 short paragraphs. Lead with positioning, then JD-mapped pattern bullets (3-4 bulleted lines using "•" not em-dash bullets), then geo + IC-permanence question if relevant.
 - **Cover letter (250-400 words)**: longer-form Summary, same structure.
@@ -68,11 +68,11 @@ Hi {first_name}, saw the {role_title} role at {company}. {pattern_match_anchor i
 Examples that fit 280:
 
 ```
-Hi Alan, saw the VP of Product role reporting into you. Last decade running product on AI-native scale-ups (Usercentrics: 7B+ signals/mo, 195+ countries, point solution to multi-product suite; Cimanote: AI-native, concept-to-prod in 5-10 days). PMF-to-platform fits. 25-min compare-notes? Blagoja
+Hi Alan, saw the VP of Product role reporting into you. Last decade running product on AI-native scale-ups (Northstar: 7B+ signals/mo, [Anchor 1 global scope], point solution to multi-product suite; Vector: AI-native, concept-to-prod in 5-10 days). PMF-to-platform fits. 25-min compare-notes? Your-First-Name
 ```
 
 ```
-Hi Kanav, saw the Head of Product Transformation role at Innovaccer. I've been the CPO three times and now run Kairos Advisory rewiring product operating models for the AI era. Force-multiplier at IC scope inside an AI-native healthcare unicorn fits. 25-min compare-notes? Blagoja
+Hi Kanav, saw the Head of Product Transformation role at [sample-healthcare-AI-co]. I've been the CPO three times and now run Compass Advisory rewiring product operating models for the AI era. Force-multiplier at IC scope inside an AI-native healthcare unicorn fits. 25-min compare-notes? Your-First-Name
 ```
 
 Always count characters. If over the limit, remove fillers ("the", "a"), shorten the pattern-match clause, or drop the role-specific landing fragment.
@@ -83,7 +83,7 @@ Three paragraphs, no headers, no bullets (unless the user has a specific reason)
 
 **Para 1**: JD hook + pattern match. "Saw the {role}. The mandate ({3-7 word JD framing}) reads as the same shape as what I led at {anchor company}: {anchor specifics}." Add growth/revenue numbers if natural.
 
-**Para 2**: Current evidence. "Currently building {Cimanote / Kairos / etc.} - so the {AI-native / operating-model / etc.} thesis is what I'm doing right now, not retrospectively."
+**Para 2**: Current evidence. "Currently building {Vector / Compass / etc.} - so the {AI-native / operating-model / etc.} thesis is what I'm doing right now, not retrospectively."
 
 **Para 3**: Geo + ask + CV. "{geo statement}. A 25-minute call to compare notes on {specific topic from JD} would be useful if you have the time. Tailored CV attached."
 
@@ -99,9 +99,9 @@ Format the Summary as:
 Pattern match to the JD:
 
 {3-4 bulleted lines (use "•" not em dashes), each landing one specific JD requirement against one specific anchor in the user's history. E.g.:
-• Operating rhythm: ran the CPO planning cadence end-to-end at Usercentrics for a regulated AI data platform at 7B+ signals/month across 195+ countries.
-• Build-from-scratch and earn buy-in without authority: built the product org from zero at Visit.org and Simpplr (Simpplr scaled $4.6M to $28.4M ARR in 2.5 years).
-• AI-native ways of working: building Cimanote concept-to-prod in 5-10 days using an AI-first build stack.}
+• Operating rhythm: ran the CPO planning cadence end-to-end at Northstar for a regulated AI data platform at [Anchor 1 throughput] across [Anchor 1 global scope].
+• Build-from-scratch and earn buy-in without authority: built the product org from zero at Lumen and Helix (Helix scaled [Anchor 2 ARR range] ARR in 2.5 years).
+• AI-native ways of working: building Vector concept-to-prod in 5-10 days using an AI-first build stack.}
 
 {Closing paragraph: comp expectations / IC-permanence question / geo statement / specific scope question worth airing in interview.}
 ```
@@ -110,7 +110,7 @@ Pattern match to the JD:
 
 If the JD body has a screener test (e.g., "mention the word 'crane' in your application"), embed the word naturally in the Summary or cover letter. Do NOT flag it as a "the word you asked for is here" tell - just include the word in a sentence that makes contextual sense.
 
-E.g., for nPlan's "crane" test:
+E.g., for [sample-construction-AI-co]'s "crane" test:
 
 ```
 ... so the AI-for-construction thesis (cranes don't lift schedules; data does) reads directly familiar.
@@ -137,13 +137,13 @@ connect_note_primary:
   contact: "Alan Mosca"
   channel: "Connect+Note (Premium)"
   char_count: 279
-  text: "Hi Alan, saw the VP of Product role reporting into you. Last decade running product on AI-native scale-ups (Usercentrics: 7B+ signals/mo, 195+ countries, point solution to multi-product suite; Cimanote: AI-native, concept-to-prod in 5-10 days). PMF-to-platform fits. 25-min compare-notes? Blagoja"
+  text: "Hi Alan, saw the VP of Product role reporting into you. Last decade running product on AI-native scale-ups (Northstar: 7B+ signals/mo, [Anchor 1 global scope], point solution to multi-product suite; Vector: AI-native, concept-to-prod in 5-10 days). PMF-to-platform fits. 25-min compare-notes? Your-First-Name"
 
 connect_note_backup:
   contact: "Dev Amratia"
   channel: "Connect+Note (Premium)"
   char_count: 280
-  text: "Hi Dev, saw the VP of Product role at nPlan, reporting into Alan..."
+  text: "Hi Dev, saw the VP of Product role at [sample-construction-AI-co], reporting into Alan..."
 
 dm_long:
   contact: "Alan Mosca"

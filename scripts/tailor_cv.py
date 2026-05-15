@@ -14,10 +14,10 @@ Discipline (per config/outreach-style.yaml):
 
 Usage:
   python3 tailor_cv.py \
-    --role-slug nplan-vp-product \
+    --role-slug brevia-vp-product \
     --baseline /path/to/templates/cv-baseline.docx \
     --replacements /path/to/replacements.json \
-    --out-dir /path/to/outreach/nplan-vp-product
+    --out-dir /path/to/outreach/brevia-vp-product
 
 The replacements.json file is a flat dict: {"old_string": "new_string", ...}.
 Each old_string must appear in the docx XML; each new_string is XML-escaped if it
@@ -94,7 +94,7 @@ def main():
         replacements = json.load(f)
 
     out_docx = os.path.join(
-        args.out_dir, f"Golubovski-Blagoja-CV-{args.role_slug}.docx"
+        args.out_dir, f"Operator-FirstName-CV-{args.role_slug}.docx"
     )
     stats = tailor(args.baseline, replacements, out_docx)
 

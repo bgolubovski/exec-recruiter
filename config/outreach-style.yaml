@@ -31,7 +31,7 @@ cv_bullet_target_words: 12-22
 # Required structural elements per outreach
 required_elements:
   - one concrete hook from the JD (specific phrase or pattern match)
-  - the user's pattern-match anchor (e.g. "Usercentrics: 7B+ signals/mo across 195+ countries")
+  - the user's pattern-match anchor (e.g. "Northstar: 7B+ signals/mo across [Anchor 1 global scope]")
   - clear ask (25-min compare-notes / a call / a redirect to the right person)
   - sign-off with first name only
 
@@ -65,10 +65,10 @@ screener_test_words:
 # Sign-off
 sign_off:
   format: "first_name_only"
-  default: "Blagoja"                  # set this to your own first name at install
+  default: "Your-First-Name"                  # set this to your own first name at install
   include_links:
-    - "linkedin.com/in/golubovski"
-    - "golubovski.com"
+    - "linkedin.com/in/operator-handle"
+    - "your-personal-site.com"
 
 # Language
 language: en-US                       # change to en-GB for UK roles if you want British spelling

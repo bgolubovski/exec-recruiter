@@ -141,7 +141,7 @@ region_query_terms:
     - "Madrid"
     - "Paris"
     - "Dublin"
-    - "Lisbon"
+    - "[Operator Home City]"
     - "Remote EU"
 
 # ---- Result-handling caps ----

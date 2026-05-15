@@ -1,7 +1,7 @@
 {
   "name": "exec-recruiter",
-  "version": "0.4.0",
-  "description": "Personal executive recruiter for Product Leadership opportunities. Daily sourcing across LinkedIn AND major ATS domains (Greenhouse, Lever, Workday, Ashby, etc.) via Google site: search, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts, approval-gated sends, and a rich live dashboard with cohort views, score histogram, domain breakdown, follow-up tracker, and inbound-signal detection.",
+  "version": "0.5.0",
+  "description": "Personal executive recruiter for Product Leadership opportunities. Five-phase pipeline: daily sourcing (LinkedIn + ATS-Google), JD-tailored CV + outreach packet build, approval-gated sends, meeting / interview prep with interviewer research + scope-disambiguation question + first-90-days narrative branches, and post-call debrief that captures intel, updates the dashboard, and identifies the next action. Includes a rich live dashboard with cohort views, score histogram, domain breakdown, follow-up tracker, and inbound-signal detection.",
   "author": {
     "name": "Blagoja Golubovski"
   },
@@ -15,7 +15,10 @@
     "ats-search",
     "outreach",
     "cv-tailoring",
-    "dashboard"
+    "dashboard",
+    "interview-prep",
+    "meeting-prep",
+    "call-debrief"
   ],
   "license": "MIT"
 }

@@ -590,7 +590,7 @@
   <div class="header">
     <div>
       <h1>CPO Job Search Dashboard</h1>
-      <div class="header-meta" id="headerSubtitle">Live tracker · stats below recompute automatically · Daily sweep at 9am + 5pm Lisbon</div>
+      <div class="header-meta" id="headerSubtitle">Live tracker · stats below recompute automatically · Daily sweep at 9am + 5pm [Operator Home City]</div>
     </div>
     <div class="header-meta" id="todayLabel"></div>
   </div>
@@ -747,8 +747,8 @@
       <p><strong>To add a new role:</strong> Append to <code>const ROLES = [...]</code> with the same shape as existing rows. Save and reload.</p>
       <p><strong>Inbound signals (passive log):</strong></p>
       <ul>
-        <li>2026-05-08: Dev Amratia (nPlan CEO) viewed profile after Connect+Note send. Hold posture.</li>
-        <li>2026-05-08: Alexey Vatolin (Talent Acquisition Lead, Forex/CFD broker, MENA+ASEAN markets, Lithuania) viewed profile. Independent of nPlan/Innovaccer pipelines. Geo (likely Cyprus/Dubai/Singapore) and sector (Forex/CFD retail trading) outside stated criteria. Hold; respond if he reaches out, do not initiate. <a href="https://www.linkedin.com/in/alexeyvatolin/">profile</a></li>
+        <li>2026-05-08: Dev Amratia ([sample-construction-AI-co] CEO) viewed profile after Connect+Note send. Hold posture.</li>
+        <li>2026-05-08: Alexey Vatolin (Talent Acquisition Lead, Forex/CFD broker, MENA+ASEAN markets, Lithuania) viewed profile. Independent of [sample-construction-AI-co]/[sample-healthcare-AI-co] pipelines. Geo (likely Cyprus/Dubai/Singapore) and sector (Forex/CFD retail trading) outside stated criteria. Hold; respond if he reaches out, do not initiate. <a href="https://www.linkedin.com/in/alexeyvatolin/">profile</a></li>
       </ul>
     </div>
   </details>
@@ -902,7 +902,7 @@ function renderRows() {
       + '<td><div class="file-links">'
         + '<a class="file-link" href="' + fileLinkPath(r.slug, 'jd.md') + '" target="_blank">JD</a>'
         + '<a class="file-link" href="' + r.jdUrl + '" target="_blank">JD↗</a>'
-        + '<a class="file-link" href="' + fileLinkPath(r.slug, 'Golubovski-Blagoja-CV-' + r.slug + '.pdf') + '" target="_blank">CV</a>'
+        + '<a class="file-link" href="' + fileLinkPath(r.slug, 'Operator-FirstName-CV-' + r.slug + '.pdf') + '" target="_blank">CV</a>'
         + sendNameLink
         + '<a class="file-link" href="' + fileLinkPath(r.slug, 'status.md') + '" target="_blank">Status</a>'
       + '</div></td>'
@@ -1175,7 +1175,7 @@ function getEngagementSignal(r) {
     return { stage: 'accepted', label: 'Connect accepted', when: r.sendDate };
   }
   // Profile view signal
-  const pvMatch = n.match(/(viewed\s+(?:Blagoja's\s+|user's\s+|my\s+)?(?:LinkedIn\s+)?profile|profile[\s-]+viewed|profile\s+view\s+signal)/i);
+  const pvMatch = n.match(/(viewed\s+(?:operator's\s+|user's\s+|my\s+)?(?:LinkedIn\s+)?profile|profile[\s-]+viewed|profile\s+view\s+signal)/i);
   if (pvMatch) {
     // Try to extract a date near the signal
     const idx = n.indexOf(pvMatch[0]);
@@ -1351,7 +1351,7 @@ function classifyDomain(r) {
   if (/grc|compliance|governance|security|risk|compyl|usercentrics|oritain/.test(blob)) return 'GRC / Compliance';
   if (/marketplace|b2b2c|two-?sided|toptal|visit\.org|fever|booking|adevinta|fotocasa/.test(blob)) return 'Marketplace / B2B2C';
   if (/adtech|advertising|localiq|usa today|razorfish|dunnhumby/.test(blob)) return 'AdTech / Retail Media';
-  if (/energy|enmacc|ensek|gas|electricity|utility/.test(blob)) return 'Energy';
+  if (/energy|[sample-energy-marketplace]|ensek|gas|electricity|utility/.test(blob)) return 'Energy';
   if (/data platform|graph|neo4j|cloud storage|netapp|infrastructure|arcadia|s&p global|wso/.test(blob)) return 'Data / Infra';
   if (/ai|agent|ml |llm |agentic|model|kairos/.test(blob)) return 'AI / ML';
   if (/social discovery|dating|sdg/.test(blob)) return 'Social / Consumer';

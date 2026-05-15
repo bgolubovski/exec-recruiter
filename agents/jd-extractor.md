@@ -5,7 +5,7 @@ description: |-
 
   <example>
   Context: Phase 1 sweep needs the full body of a LinkedIn job whose card-level data alone is insufficient for scoring.
-  user: "Pull the full JD for https://www.linkedin.com/jobs/view/4410881756/"
+  user: "Pull the full JD for https://www.linkedin.com/jobs/view/EXAMPLE001/"
   assistant: I'll extract the destination ATS URL from the apply-link redirect, navigate, and pull the full JD body.
   <commentary>
   LinkedIn unauth view is a skeleton; the JD body is at the destination ATS. Use the redirect-URL extraction trick to recover it.
@@ -14,7 +14,7 @@ description: |-
 
   <example>
   Context: Phase 2 packet build requires a JD body to derive replacements for CV tailoring and to identify anti-bot screener words.
-  user: "Build the packet for nplan-vp-product"
+  user: "Build the packet for brevia-vp-product"
   assistant: First I'll pull the full JD via the ATS redirect so I can tailor the CV against the actual mandate signals and detect any screener words like 'crane'.
   <commentary>
   Card-level data misclassified the title implication; the body has the real reporting line, customer names, and screener test.
@@ -23,8 +23,8 @@ description: |-
 
   <example>
   Context: Score-role skill receives a LinkedIn URL with no other context.
-  user: "score this https://www.linkedin.com/jobs/view/4410842089/"
-  assistant: I'll pull the full JD body first - the title-level read at LinkedIn often contradicts the body (saw this happen with Innovaccer's "Head of Product Transformation" being a chief-of-staff IC role).
+  user: "score this https://www.linkedin.com/jobs/view/EXAMPLE002/"
+  assistant: I'll pull the full JD body first - the title-level read at LinkedIn often contradicts the body (saw this happen with [sample-healthcare-AI-co]'s "Head of Product Transformation" being a chief-of-staff IC role).
   <commentary>
   Always extract the body before scoring. Card-only scores are low-confidence.
   </commentary>
@@ -116,7 +116,7 @@ Return a structured object to the calling skill:
 ats_url: "https://nplan.teamtailor.com/jobs/7667384-vp-of-product"
 ats_host: "teamtailor.com"
 title: "VP of Product"
-company: "nPlan"
+company: "[sample-construction-AI-co]"
 location: "London"
 modality: "Fully Remote"
 employment_type: "Full-time"
