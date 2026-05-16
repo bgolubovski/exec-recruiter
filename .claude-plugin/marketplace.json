@@ -1,30 +1,24 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "exec-recruiter",
+  "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts, approval-gated sends, meeting prep, and post-call debrief.",
   "owner": {
     "name": "Blagoja Golubovski"
-  },
-  "metadata": {
-    "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts, approval-gated sends, meeting prep, and post-call debrief.",
-    "version": "0.5.0"
   },
   "plugins": [
     {
       "name": "exec-recruiter",
+      "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts.",
+      "author": {
+        "name": "Blagoja Golubovski"
+      },
+      "category": "productivity",
       "source": {
         "source": "url",
         "url": "https://github.com/bgolubovski/exec-recruiter.git",
         "sha": "c81ba89ff0f1b2a2b8392005f4424991f80040e0"
       },
-      "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts.",
-      "version": "0.5.0",
-      "keywords": [
-        "job-search",
-        "product-leadership",
-        "cpo",
-        "vp-product",
-        "linkedin",
-        "ats-search"
-      ]
+      "homepage": "https://github.com/bgolubovski/exec-recruiter"
     }
   ]
 }
