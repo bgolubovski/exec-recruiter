@@ -13,11 +13,7 @@
         "name": "Blagoja Golubovski"
       },
       "category": "productivity",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/bgolubovski/exec-recruiter.git",
-        "sha": "c81ba89ff0f1b2a2b8392005f4424991f80040e0"
-      },
+      "source": ".",
       "homepage": "https://github.com/bgolubovski/exec-recruiter"
     }
   ]
