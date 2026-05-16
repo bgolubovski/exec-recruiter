@@ -36,3 +36,15 @@ These are the plugin's discipline, not preferences:
 ## Versioning
 
 Semver. Bump in `.claude-plugin/plugin.json`. Tag releases on GitHub.
+
+## Release checklist
+
+Before every commit that touches `.claude-plugin/` or any skill / agent / template:
+
+```bash
+./scripts/validate.sh
+```
+
+This runs `claude plugin validate` on both `plugin.json` and `marketplace.json`. Fix any reported errors before pushing. The validator's strictness has surprised us before (e.g., the `marketplace.json` `source` field must be `"./"` with the trailing slash, not `"."`), so trust the validator over schemas you find online.
+
+If you update the README in the `.plugin` zip, also update it in the repo — the zip and repo READMEs should stay in sync.
