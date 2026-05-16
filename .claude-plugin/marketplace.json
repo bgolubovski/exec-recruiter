@@ -5,13 +5,15 @@
   },
   "metadata": {
     "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts, approval-gated sends, meeting prep, and post-call debrief.",
-    "version": "0.5.0",
-    "pluginRoot": "."
+    "version": "0.5.0"
   },
   "plugins": [
     {
       "name": "exec-recruiter",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "bgolubovski/exec-recruiter"
+      },
       "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts.",
       "version": "0.5.0",
       "keywords": [
