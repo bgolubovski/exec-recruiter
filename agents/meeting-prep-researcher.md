@@ -1,6 +1,6 @@
 ---
 name: meeting-prep-researcher
-description: Research a named interviewer (LinkedIn + TheOrg + Crunchbase + web search) and refresh company intel for a meeting prep packet. Used by phase-4-prep skill. Produces structured interviewer profile + company-intel-refresh notes that phase-4-prep populates into the meeting prep templates.
+description: "Research a named interviewer (LinkedIn + TheOrg + Crunchbase + web search) and refresh company intel for a meeting prep packet. Used by phase-4-prep skill. Produces structured interviewer profile + company-intel-refresh notes that phase-4-prep populates into the meeting prep templates."
 tools: WebSearch, mcp__workspace__web_fetch, mcp__Claude_in_Chrome__navigate, mcp__Claude_in_Chrome__get_page_text, mcp__Claude_in_Chrome__javascript_tool, mcp__Claude_in_Chrome__tabs_context_mcp
 ---
 

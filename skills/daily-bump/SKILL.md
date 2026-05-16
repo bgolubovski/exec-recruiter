@@ -1,6 +1,6 @@
 ---
 name: daily-bump
-description: Generate Day-5/7/10 follow-up bump messages for any pending roles. Triggers on "what bumps today", "Day-5 bumps", "follow-ups due", "/bump", "/bump X", or "what should I follow up on today". Reads the dashboard, finds roles in the bump window or past Day-10 final-action threshold, and drafts the appropriate bump message per role per follow-up.yaml templates.
+description: "Generate Day-5/7/10 follow-up bump messages for any pending roles. Triggers on \"what bumps today\", \"Day-5 bumps\", \"follow-ups due\", \"/bump\", \"/bump X\", or \"what should I follow up on today\". Reads the dashboard, finds roles in the bump window or past Day-10 final-action threshold, and drafts the appropriate bump message per role per follow-up.yaml templates."
 ---
 
 # daily-bump

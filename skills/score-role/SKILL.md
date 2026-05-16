@@ -1,6 +1,6 @@
 ---
 name: score-role
-description: Score a single role against the user's ICP and scoring weights. Triggers on "score this role", "score this JD", "is this a fit", "rate this", "/score", or pasting a JD URL with no other context. Pulls the JD body if needed, applies dimensional scoring per scoring.yaml, returns a 1-10 score with per-dimension breakdown and tier classification. Lightweight, no packet generation.
+description: "Score a single role against the user's ICP and scoring weights. Triggers on \"score this role\", \"score this JD\", \"is this a fit\", \"rate this\", \"/score\", or pasting a JD URL with no other context. Pulls the JD body if needed, applies dimensional scoring per scoring.yaml, returns a 1-10 score with per-dimension breakdown and tier classification. Lightweight, no packet generation."
 ---
 
 # score-role

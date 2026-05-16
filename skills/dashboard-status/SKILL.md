@@ -1,6 +1,6 @@
 ---
 name: dashboard-status
-description: Read the current dashboard and surface today's actions, status counts, and follow-up windows. Triggers on "where do I stand", "today's actions", "dashboard status", "/dashboard", "what's the state", "status check", or first thing in the morning before the sweep. Lightweight read-only operation that summarizes the pipeline without changing anything.
+description: "Read the current dashboard and surface today's actions, status counts, and follow-up windows. Triggers on \"where do I stand\", \"today's actions\", \"dashboard status\", \"/dashboard\", \"what's the state\", \"status check\", or first thing in the morning before the sweep. Lightweight read-only operation that summarizes the pipeline without changing anything."
 ---
 
 # dashboard-status

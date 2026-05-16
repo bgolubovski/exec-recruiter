@@ -1,6 +1,6 @@
 ---
 name: phase-3-send
-description: Walk through Phase 3 send for a single greenlit packet. Triggers on "send X", "Phase 3 X", "/send X", "fire X", "let's send X", or "ready to send X". Opens the right LinkedIn surface for each channel (Connect+Note dialog, DM thread, InMail compose), types the drafted message into the field, and stops with the cursor positioned for the user to click Send. Never sends autonomously. Walks the user through each channel in priority order; after each user-confirmed send, updates the dashboard from "drafted" to "pending" with sendDate today.
+description: "Walk through Phase 3 send for a single greenlit packet. Triggers on \"send X\", \"Phase 3 X\", \"/send X\", \"fire X\", \"let's send X\", or \"ready to send X\". Opens the right LinkedIn surface for each channel (Connect+Note dialog, DM thread, InMail compose), types the drafted message into the field, and stops with the cursor positioned for the user to click Send. Never sends autonomously. Walks the user through each channel in priority order; after each user-confirmed send, updates the dashboard from \"drafted\" to \"pending\" with sendDate today."
 ---
 
 # phase-3-send

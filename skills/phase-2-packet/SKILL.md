@@ -1,6 +1,6 @@
 ---
 name: phase-2-packet
-description: Build a Phase 2 outreach packet for a single greenlit role. Triggers on "build packet for X", "tailor CV for X", "Phase 2", "packet X", "/packet", or any request to prepare an application for a specific company / role. Pulls the full JD via the ATS redirect, identifies the right contacts, generates a JD-tailored CV (docx + PDF) per the discipline rules, drafts channel-appropriate outreach (Connect+Note + longer DM), and saves the packet under outreach/{slug}/. Stops before Phase 3 - waits for the user's explicit "send" approval.
+description: "Build a Phase 2 outreach packet for a single greenlit role. Triggers on \"build packet for X\", \"tailor CV for X\", \"Phase 2\", \"packet X\", \"/packet\", or any request to prepare an application for a specific company / role. Pulls the full JD via the ATS redirect, identifies the right contacts, generates a JD-tailored CV (docx + PDF) per the discipline rules, drafts channel-appropriate outreach (Connect+Note + longer DM), and saves the packet under outreach/{slug}/. Stops before Phase 3 - waits for the user's explicit \"send\" approval."
 ---
 
 # phase-2-packet

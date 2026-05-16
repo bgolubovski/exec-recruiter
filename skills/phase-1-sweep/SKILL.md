@@ -1,6 +1,6 @@
 ---
 name: phase-1-sweep
-description: Run the daily Phase 1 sweep for senior product leadership roles. Triggers on "run today's sweep", "Phase 1", "find new roles", "/sweep", "what's new today", "morning sweep", "scan LinkedIn for product roles". Sources roles from LinkedIn AND directly from major ATS domains (Greenhouse, Lever, Workday, Ashby, etc.) via Google site: search, pulls JD bodies via the apply-link redirect or direct fetch, scores each role 1-10 against the user's ICP and scoring weights, dedupes against the existing dashboard, and produces a Tier-1 / Tier-2 / Skip greenlight summary. Stops before Phase 2 - waits for the user's per-role greenlight.
+description: "Run the daily Phase 1 sweep for senior product leadership roles. Triggers on \"run today's sweep\", \"Phase 1\", \"find new roles\", \"/sweep\", \"what's new today\", \"morning sweep\", \"scan LinkedIn for product roles\". Sources roles from LinkedIn AND directly from major ATS domains (Greenhouse, Lever, Workday, Ashby, etc.) via Google site: search, pulls JD bodies via the apply-link redirect or direct fetch, scores each role 1-10 against the user's ICP and scoring weights, dedupes against the existing dashboard, and produces a Tier-1 / Tier-2 / Skip greenlight summary. Stops before Phase 2 - waits for the user's per-role greenlight."
 ---
 
 # phase-1-sweep
