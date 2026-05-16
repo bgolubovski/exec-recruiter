@@ -1,3 +1,8 @@
+---
+name: phase-4-prep
+description: Build a meeting / interview prep packet for a booked conversation on a specific role. Triggers on "prep me for X", "build prep packet for X", "interview prep X", "/prep <slug> <interviewer-name>", "screening call prep", "panel prep", "final round prep". Pulls role context from the dashboard, researches the named interviewer (LinkedIn, TheOrg, Crunchbase, web), refreshes company intel, generates the scope-disambiguation question, first-90-days narrative (with branches if scope is ambiguous), questions to ask, one-line answers to likely questions back, comp posture, friction flags, and a wrap-up signal checklist. Saves three artifacts: full markdown, interactive HTML, and a one-page scannable card. Supports rounds screen / working-session / panel / final / exec / reference-check-prep. User-invoked only, never auto-fires.
+---
+
 # phase-4-prep
 
 Build a meeting / interview prep packet for a booked conversation on a specific role. Pulls role context from the dashboard, researches the interviewer, refreshes company intel, generates the scope-disambiguation question, first-90-days narrative (with branches if scope is ambiguous), questions to ask, one-line answers to likely questions back, comp posture, friction flags, and a wrap-up signal checklist. Saves three artifacts: full markdown, interactive HTML, and a one-page scannable card.

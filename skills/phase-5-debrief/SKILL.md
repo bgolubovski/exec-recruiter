@@ -1,3 +1,8 @@
+---
+name: phase-5-debrief
+description: Process post-call notes from a meeting prepared via phase-4-prep. Triggers on "debrief X", "log my call with X", "/debrief X", "/debrief <slug>", "I just talked to <name> here are my notes", or pasting raw call notes after a Phase-4-prepped meeting. Captures intel learned in the call (scope answer, comp signals, process commitments, friction flags, anchors that landed), updates the dashboard, identifies the next-action (prep next round / send thank-you and wait / send requested materials / passive watch / mark rejected / escalate to different contact), and prompts for memory writes when patterns emerge. User-invoked only, never auto-fires.
+---
+
 # phase-5-debrief
 
 Process post-call notes from a meeting prepared via phase-4-prep. Capture the intel learned in the call, update the dashboard, identify the next-action, and route to the right next step (Phase 4 again for next round, Phase 3 for additional outreach, mark replied / advanced / rejected, etc.).
