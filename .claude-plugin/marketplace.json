@@ -1,18 +1,19 @@
 {
   "name": "bgolubovski-marketplace",
   "owner": {
-    "name": "Blagoja Golubovski",
-    "url": "https://github.com/bgolubovski"
+    "name": "Blagoja Golubovski"
   },
   "metadata": {
+    "description": "Personal plugin marketplace by Blagoja Golubovski.",
     "version": "1.0.0",
-    "description": "Personal plugin marketplace by Blagoja Golubovski."
+    "pluginRoot": "."
   },
   "plugins": [
     {
       "name": "exec-recruiter",
       "source": ".",
       "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts.",
+      "version": "0.5.0",
       "keywords": [
         "job-search",
         "product-leadership",
