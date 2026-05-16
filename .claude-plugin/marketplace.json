@@ -11,8 +11,9 @@
     {
       "name": "exec-recruiter",
       "source": {
-        "source": "github",
-        "repo": "bgolubovski/exec-recruiter"
+        "source": "url",
+        "url": "https://github.com/bgolubovski/exec-recruiter.git",
+        "sha": "c81ba89ff0f1b2a2b8392005f4424991f80040e0"
       },
       "description": "Personal executive recruiter for senior Product Leadership job hunts. Dual sourcing across LinkedIn AND major ATS domains, fit-scored triage, JD-tailored CV generation, contact-aware outreach drafts.",
       "version": "0.5.0",
