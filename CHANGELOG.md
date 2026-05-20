@@ -2,6 +2,35 @@
 
 All notable changes to the exec-recruiter plugin.
 
+## v0.5.1 (2026-05-20)
+
+### Fixed
+
+- **Dashboard engagement-signal classifier**: `getEngagementSignal()` previously short-circuited on `r.status === 'replied'` before checking the interview regex, which meant any replied-status role with an interview phrase in its note (e.g., "interview invite", "interview scheduled", "advanced to next round") could not appear in the Interview funnel card. Reordered so the interview regex check runs first. The funnel widget's cumulative roll-up (`replied = replied + interview`) already handles double-counting correctly, so interview-stage roles now correctly appear in BOTH the Replied counter (via status field) AND the Interview funnel card (via note regex).
+
+### Added
+
+- **`nextActions` (and `nextAction` shorthand) on the role schema**. The `pendingMilestones()` function now emits two classes of calendar milestones:
+  - **(a) Outreach-cycle milestones** (Day-5 / Day-7 / Day-10 bumps), automatically generated for `status: "pending"` roles with a `sendDate`. Unchanged behavior.
+  - **(b) Custom next-action milestones**, read from a `nextActions` array on the role object. Applies to any status that isn't rejected or skipped.
+
+  Schema:
+  ```js
+  nextActions: [
+    { date: "2026-05-20", action: "Reply to interviewer with time slots", urgency: "hard" },
+    { date: "2026-05-22", action: "If no interview scheduled, follow up", urgency: "mid" }
+  ]
+  ```
+
+  Single-action shorthand also supported: `nextAction: "..."` + `nextActionDate: "..."` + optional `nextActionUrgency`.
+
+  Use `nextActions` whenever an interview-stage role has a known time-bound action (reply with slots, prep day-before, post-call summary, etc.). Without it, the calendar would be silent on advanced roles since outreach-cycle milestones only fire for pending status.
+
+### Notes
+
+- These fixes were prompted by an interview-stage role that disappeared from both the Interview funnel card and the bottom calendar table after its status was advanced to `replied`. Both fixes are backward-compatible: existing pending-status roles continue to receive the standard Day-5/7/10 milestone cycle, and roles without a `nextActions` field behave exactly as before.
+- The combined rule when a role advances to interview stage: (1) set `status: "replied"`, (2) add at least one interview-regex-matching phrase to the note, (3) add a `nextActions` array with date-bound next-steps.
+
 ## v0.5.0 (2026-05-14)
 
 ### Added

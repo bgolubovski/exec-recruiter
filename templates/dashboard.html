@@ -965,14 +965,34 @@ function dayName(d) {
 function pendingMilestones() {
   const out = [];
   ROLES.forEach(r => {
-    if (r.status !== 'pending' || !r.sendDate) return;
-    const sent = new Date(r.sendDate);
-    const day5 = new Date(sent); day5.setDate(sent.getDate() + 5);
-    const day7 = new Date(sent); day7.setDate(sent.getDate() + 7);
-    const day10 = new Date(sent); day10.setDate(sent.getDate() + 10);
-    out.push({ date: fmtDate(nextWeekday(day5)), action: 'Bump window opens', role: r, urgency: 'soft' });
-    out.push({ date: fmtDate(nextWeekday(day7)), action: 'Last bump day', role: r, urgency: 'mid' });
-    out.push({ date: fmtDate(nextWeekday(day10)), action: 'Day-10 final / pivot to backup', role: r, urgency: 'hard' });
+    // Outreach-cycle milestones (Day-5/7/10) only for pending roles
+    if (r.status === 'pending' && r.sendDate) {
+      const sent = new Date(r.sendDate);
+      const day5 = new Date(sent); day5.setDate(sent.getDate() + 5);
+      const day7 = new Date(sent); day7.setDate(sent.getDate() + 7);
+      const day10 = new Date(sent); day10.setDate(sent.getDate() + 10);
+      out.push({ date: fmtDate(nextWeekday(day5)), action: 'Bump window opens', role: r, urgency: 'soft' });
+      out.push({ date: fmtDate(nextWeekday(day7)), action: 'Last bump day', role: r, urgency: 'mid' });
+      out.push({ date: fmtDate(nextWeekday(day10)), action: 'Day-10 final / pivot to backup', role: r, urgency: 'hard' });
+    }
+    // Custom next-action milestones (apply to ANY status that isn't rejected/skipped)
+    // Use nextActions array for multiple milestones, OR single nextAction+nextActionDate fields.
+    // Format:
+    //   nextActions: [{ date: "YYYY-MM-DD", action: "string", urgency: "hard|mid|soft" }, ...]
+    //   OR nextAction: "string" + nextActionDate: "YYYY-MM-DD" + nextActionUrgency: "hard|mid|soft"
+    // Use this for interview-stage roles where the calendar should show "Reply with time slots",
+    // "Prep day before interview", "Send thank-you / post-call summary", etc.
+    if (r.status !== 'rejected' && r.status !== 'skipped') {
+      if (Array.isArray(r.nextActions)) {
+        r.nextActions.forEach(na => {
+          if (na && na.date && na.action) {
+            out.push({ date: na.date, action: na.action, role: r, urgency: na.urgency || 'hard' });
+          }
+        });
+      } else if (r.nextAction && r.nextActionDate) {
+        out.push({ date: r.nextActionDate, action: r.nextAction, role: r, urgency: r.nextActionUrgency || 'hard' });
+      }
+    }
   });
   return out;
 }
@@ -1158,12 +1178,13 @@ document.getElementById('searchBox').addEventListener('input', e => {
 function getEngagementSignal(r) {
   if (r.status === 'rejected') return null; // rejection overrides any engagement signal
   const n = (r.note || '');
-  // Hierarchy: replied > interview > screener-invite > accepted > profile-view > none
-  if (r.status === 'replied') return { stage: 'replied', label: 'Replied', when: r.sendDate };
-  // Interview: only specific interview-process phrases, NOT bare "interview" or "on-site" (false-positive on geo)
+  // Hierarchy: interview > replied > screener-invite > accepted > profile-view > none
+  // Interview check FIRST so status='replied' roles with interview phrases get the higher-fidelity Interview label.
+  // The funnel widget does cumulative roll-up (replied = replied + interview), so Interview-stage roles also appear in Replied counter.
   if (/\b(interview\s+(invite|scheduled|round|loop|panel|call|day)|finalist\s+round|home\s+assignment|advanced\s+to\s+(interview|next|round)|first\s+round\s+(interview|call)|on-?site\s+(interview|loop))\b/i.test(n)) {
     return { stage: 'interview', label: 'Interview', when: r.sendDate };
   }
+  if (r.status === 'replied') return { stage: 'replied', label: 'Replied', when: r.sendDate };
   // Screener: explicit screener/recruiter-call phrases
   if (/\b(screener\s+(call|invite|email|interview)|recruiter\s+(call|reply|screening)|screening\s+call|moved\s+to\s+screen)\b/i.test(n)) {
     return { stage: 'screener', label: 'Screener', when: r.sendDate };
