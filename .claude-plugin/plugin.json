@@ -1,6 +1,6 @@
 {
   "name": "exec-recruiter",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Personal executive recruiter for Product Leadership opportunities. Five-phase pipeline: daily sourcing (LinkedIn + ATS-Google), JD-tailored CV + outreach packet build, approval-gated sends, meeting / interview prep with interviewer research + scope-disambiguation question + first-90-days narrative branches, and post-call debrief that captures intel, updates the dashboard, and identifies the next action. Includes a rich live dashboard with cohort views, score histogram, domain breakdown, follow-up tracker, and inbound-signal detection.",
   "author": {
     "name": "Blagoja Golubovski"

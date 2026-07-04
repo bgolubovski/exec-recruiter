@@ -31,7 +31,7 @@ The baseline CV's structure is sacred. The fields you may modify are narrow:
 
 1. **Headline-positioning fragment** - the line just below the name, e.g. "Chief Product Officer | AI-Native Operating Model | PMF to Global Platform Scale | Founder Partner | $120M+ ARR"
 2. **Geo-conditional header** - the location line, e.g. "[Operator Home City] ([Operator Citizenship], [Operator Relocation Status])"
-3. **Tailored-for tag** - the small line that says "Tailored for {company}, {role}"
+3. **Tailored-for tag** - the small italic gray line that says "Tailored for {company}, {role}". The baseline deliberately carries NO such line; the tailor script INSERTS it per role (see Step 3). Never add it by editing the baseline.
 4. **Adjacency sentence in the executive summary** - the LAST sentence of the executive summary paragraph, which lands the role-specific analogue. Format: "Most recent platform serves... the closest analogue to {company}'s {mandate framing}."
 5. **One or two career-highlight cells** (out of six) - rename + body. Cells you don't touch stay exactly as in the baseline.
 6. **Italic context lines per relevant past role** - one line in italic under each EXPERIENCE heading that contextualizes that role for the target. E.g. "Direct analogue to {company}'s {mandate}: led product on..."
@@ -72,7 +72,7 @@ For each modifiable field, build a `(old_string, new_string)` pair:
 - EU non-UK -> "[Operator Home City]"
 - Dubai / Israel / etc. -> "[Operator Home City]" (do NOT claim relocation without explicit user approval)
 
-**Tailored-for tag**: `Tailored for {company}, {role_title}` exactly.
+**Tailored-for tag**: `Tailored for {company}, {role_title}` exactly. This is NOT a replacement pair - the baseline has no tailored-for line to replace. Pass the full tag text to the script via `--tailored-for` (Step 3) and it inserts a small italic gray centered paragraph between the contact line and the EXECUTIVE SUMMARY heading.
 
 **Adjacency sentence**: replace the existing adjacency clause. Format:
 
@@ -84,8 +84,10 @@ The `{mandate framing}` should pattern-match the JD body's strongest signals. E.
 
 **Career-highlight cell** (max 2 of 6): Rename + body. Pick the cell whose existing framing is FURTHEST from the JD. For example:
 
-- [sample-construction-AI-co]: replace "Sales-Led Culture Navigation" with "AI-Native Operating Model" (body: "Built AI-native operating models at Vector and Northstar; ship-in-months not years.")
-- [sample-healthcare-AI-co] Office-of-the-CPO: replace "Sales-Led Culture Navigation" with "Operating Rhythm Builder" (body: "Designed and stood up product operating models from scratch: planning calendars, OKR processes, roadmap governance, cross-functional rituals, DACI frameworks, async-first norms.")
+- [sample-construction-AI-co]: replace "Inflection-Point Operator" with "AI-Native Operating Model" (body: "Built AI-native operating models at Vector and Northstar; ship-in-months not years.")
+- [sample-healthcare-AI-co] Office-of-the-CPO: replace "Inflection-Point Operator" with "Operating Rhythm Builder" (body: "Designed and stood up product operating models from scratch: planning calendars, OKR processes, roadmap governance, cross-functional rituals, DACI frameworks, async-first norms.")
+
+CAUTION: replacements are plain global string replaces against document.xml, so the old string you target must appear exactly once in the document. Cell titles can collide with the CORE COMPETENCIES list (e.g. "Sales-Led Culture Navigation" lives there); if the title alone is not unique, target the title together with enough of the cell body to make the match unique.
 
 **Italic context line per role**: each past role (Vector, Northstar, Lumen, Helix, Atlas/Quanta Pay) has one italic context line above its bullet points. Tailor the phrase per role to the target. Format:
 
@@ -102,15 +104,17 @@ Use the `${CLAUDE_PLUGIN_ROOT}/scripts/tailor_cv.py` script. It:
 1. Opens the baseline docx as a zip
 2. Reads `word/document.xml`
 3. For each `(old_string, new_string)` pair, applies `text.replace(old, new_safe)` (where `new_safe` has any unescaped `&` characters auto-escaped to `&amp;`)
-4. Writes the new docx with the modified XML
+4. If `--tailored-for` is given, inserts the tailored-for paragraph (small italic gray, centered) immediately before the EXECUTIVE SUMMARY heading
+5. Writes the new docx with the modified XML
 
-Pass replacements via a JSON file:
+Pass replacements via a JSON file and the tailored-for tag via the flag:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/tailor_cv.py \
   --role-slug brevia-vp-product \
   --baseline /path/to/templates/cv-baseline.docx \
   --replacements /tmp/nplan-replacements.json \
+  --tailored-for "Tailored for Brevia, VP Product" \
   --out-dir /path/to/outreach/brevia-vp-product
 ```
 
@@ -130,7 +134,12 @@ for i in [1,2,8,10,12,13,36,53]:
 "
 ```
 
-The output indices `[1,2,8,10,12,13,36,53]` correspond to: headline, geo, tailored-for tag, adjacency, highlight cell title, highlight cell body, Northstar italic, Helix italic. Check the right strings landed.
+The output indices `[1,2,8,10,12,13,36,53]` correspond to: headline, geo, tailored-for tag, adjacency (the executive summary paragraph), first highlight cell title, first highlight cell body, Northstar italic context line, Helix italic context line. Check the right strings landed.
+
+Two things to know about this map:
+
+- It is valid only for the TAILORED output, where the tailored-for paragraph has been inserted. The bare baseline has no tailored-for line, so everything from the EXECUTIVE SUMMARY heading onward sits one index lower there.
+- Indices 12 and 13 are the FIRST highlight cell. If you swapped a different cell, verify that cell's indices instead (each cell is a title/body pair walking forward from 12: second cell is 14/15, and so on).
 
 ### Step 4: Handle XML-escaping pitfalls
 
@@ -143,8 +152,9 @@ If LibreOffice fails to convert a docx, the most common cause is invalid XML fro
 ```yaml
 docx_path: /path/to/outreach/brevia-vp-product/Operator-FirstName-CV-brevia-vp-product.docx
 pdf_path: /path/to/outreach/brevia-vp-product/Operator-FirstName-CV-brevia-vp-product.pdf
-replacements_applied: 8
+replacements_applied: 7
 replacements_missed: []
+tailored_for_inserted: true
 ```
 
 The calling skill uses these paths to attach the CV to applications and to surface in chat with computer:// links.

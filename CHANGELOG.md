@@ -2,6 +2,20 @@
 
 All notable changes to the exec-recruiter plugin.
 
+## v0.5.2 (2026-07-05)
+
+### Fixed
+
+- **CV tailored-for flow rebuilt around insertion.** The baseline CV no longer carries a "Tailored for {company}, {role}" line (the old one was removed per operator direction), which broke the string-replacement anchor the tailoring flow relied on. `scripts/tailor_cv.py` now takes a `--tailored-for` flag and inserts the tag as a small italic gray centered paragraph between the contact line and the EXECUTIVE SUMMARY heading. `agents/cv-tailor.md` Step 2 and Step 3 updated accordingly: the tag is passed via the flag, never derived as a replacement pair.
+- **PDF conversion binary fallback.** `tailor_cv.py` now resolves `libreoffice` OR `soffice` from PATH instead of hardcoding `libreoffice` (macOS Homebrew installs only ship `soffice`).
+
+### Changed
+
+- **Verification text-index map re-derived** against the new baseline and confirmed empirically: `[1,2,8,10,12,13,36,53]` = headline, geo, tailored-for tag (inserted), adjacency, first highlight cell title, first highlight cell body, Northstar italic, Helix italic. The map is documented as valid only for the tailored output (post-insertion); the bare baseline sits one index lower from EXECUTIVE SUMMARY onward.
+- **Highlight-cell swap examples updated**: the cell formerly titled "Sales-Led Culture Navigation" is now "Inflection-Point Operator"; `cv-tailor.md` examples reference the new title, plus a caution that replacement old-strings must be unique in document.xml (the old title still exists in CORE COMPETENCIES and would be corrupted by a global replace).
+- **`templates/CV-REQUIREMENTS.md`** now documents that the tailored-for line must NOT be present in the baseline and that the index map must be derived from a tailored output.
+- **Baseline refresh**: `templates/cv-baseline.docx` neutralized (tailored-for paragraph removed); `cv-baseline-reference.pdf` regenerated to match.
+
 ## v0.5.1 (2026-05-20)
 
 ### Fixed

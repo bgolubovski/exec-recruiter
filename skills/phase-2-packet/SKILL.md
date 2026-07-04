@@ -84,7 +84,7 @@ Delegate to the `cv-tailor` agent. Pass:
   - One or two career-highlight cells (rename + body)
   - Italic context line per relevant past role
   - Geo-conditional header per `geo-rules.cv_header_templates`
-  - "Tailored for {company}, {role}" tag
+  - "Tailored for {company}, {role}" tag (the baseline carries no such line; the tailor script inserts it via its `--tailored-for` flag)
 
 The agent applies the discipline rules from `outreach-style.yaml`:
 

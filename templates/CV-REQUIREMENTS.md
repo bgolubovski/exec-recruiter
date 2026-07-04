@@ -13,8 +13,10 @@ not personal.
 3. **Geo-conditional header** - one line with your location and work-auth status, ~10pt.
    The plugin picks from `geo-rules.cv_header_templates` per role's region.
 4. **Contact line** - email, LinkedIn, personal site, ~10pt.
-5. **Tailored-for tag** - italic gray line "Tailored for {company}, {role_title}".
-   The plugin fills this per role.
+5. **Tailored-for tag (inserted at tailoring time, NOT part of the baseline)** -
+   italic gray centered line "Tailored for {company}, {role_title}". Do not put
+   this line in your baseline docx; `scripts/tailor_cv.py --tailored-for` inserts
+   it per role between the contact line and the EXECUTIVE SUMMARY heading.
 6. **EXECUTIVE SUMMARY** - 2-4 sentences. The LAST sentence is the adjacency sentence
    that the plugin rewrites per role to land the role-specific analogue.
 7. **CAREER HIGHLIGHTS** - a 2x3 or 3x2 grid of 6 cells. Each cell has a title
@@ -32,7 +34,7 @@ not personal.
 
 - Headline-positioning fragment
 - Geo-conditional header
-- Tailored-for tag
+- Tailored-for tag (inserted per role; the baseline carries no such line)
 - The adjacency sentence at the end of EXECUTIVE SUMMARY
 - 1-2 of 6 CAREER HIGHLIGHTS cells (title + body)
 - The italic context line for each role in EXPERIENCE
@@ -57,10 +59,12 @@ Edit `config/outreach-style.yaml` `cv_filename_prefix`. Common pattern:
 
 The `cv-tailor` agent uses python to verify replacements landed by reading
 specific text indices in the docx XML. Those indices are SPECIFIC TO YOUR CV
-structure. After you replace `cv-baseline.docx` with your own, run the script
-the agent describes (see `agents/cv-tailor.md` Step 3) once against your
-baseline to identify which indices correspond to which fields, then update the
-agent's `[1, 2, 8, 10, 12]` example to match your actual mapping.
+structure. After you replace `cv-baseline.docx` with your own, produce one
+tailored output (so the inserted tailored-for paragraph is present - the map
+must be derived from a TAILORED docx, not the bare baseline) and run the
+verification snippet the agent describes (see `agents/cv-tailor.md` Step 3)
+against it to identify which indices correspond to which fields. Then update
+the agent's `[1,2,8,10,12,13,36,53]` map to match your actual mapping.
 
 ## Reference PDF
 

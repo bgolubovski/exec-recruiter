@@ -104,4 +104,4 @@ No skill in this plugin sends a LinkedIn message, an email, or an application au
 
 ## Versioning
 
-See `CHANGELOG.md` for the full version history. Current version: 0.5.1.
+See `CHANGELOG.md` for the full version history. Current version: 0.5.2.
